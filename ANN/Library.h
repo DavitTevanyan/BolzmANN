@@ -111,4 +111,8 @@ struct Queue : std::queue<T>
 };
 
 #endif // LIBRARY_H
+<<<<<<< refs/remotes/origin/test_branch
 // Should check in this comment.
+=======
+// testing conflict resolution with GitKraken
+>>>>>>> testing conflict resolution with GitKraken
