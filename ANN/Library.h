@@ -111,4 +111,3 @@ struct Queue : std::queue<T>
 };
 
 #endif // LIBRARY_H
-// Should check in this comment.
