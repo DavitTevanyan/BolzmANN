@@ -33,7 +33,7 @@ TrainingData::TrainingData(const std::string& filename)
     trainingDataFile_.open(filename.c_str());
 }
 
-int TrainingData::getNextInputs(std::vector<double>& inputVals)
+int TrainingData::getNextInput(std::vector<double>& inputVals)
 {
     inputVals.clear();
 
@@ -55,7 +55,7 @@ int TrainingData::getNextInputs(std::vector<double>& inputVals)
     return static_cast<int>(inputVals.size());
 }
 
-int TrainingData::getTargetOutputs(std::vector<double>& targetOutputVals)
+int TrainingData::getTargetOutput(std::vector<double>& targetOutputVals)
 {
     targetOutputVals.clear();
 

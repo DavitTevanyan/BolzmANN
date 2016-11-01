@@ -5,7 +5,7 @@
 
 using namespace ANN;
 
-void showsvectorVals(const std::string& label, const std::vector<double>& v)
+void display(const std::string& label, const std::vector<double>& v)
 {
     std::cout << label << " ";
 
@@ -25,40 +25,34 @@ int main()
     std::vector<int> topology;
     topology = trainData.getTopology();
 
-    Net myNet(topology);
+    Net net(topology);
 
     std::vector<double> inputVals; 
     std::vector<double> targetVals;
-    std::vector<double> resultVals;
-    int            trainingPass = 0;
 
+    int pass = 0;
     while (!trainData.isEof()) 
     {
-        ++trainingPass;
-        std::cout << std::endl << "Pass:    " << trainingPass << std::endl;
+        std::cout << std::endl << "Pass:    " << ++pass << std::endl;
 
-        // Get new input data and feed it forward:
-        if (trainData.getNextInputs(inputVals) != topology[0]) 
+        // Get new input data and feed it forward
+        if (trainData.getNextInput(inputVals) != topology[0]) 
         {
             break;
         }
-        showsvectorVals("Inputs: ", inputVals);
-        myNet.feedForward(inputVals);
+        net.feedForward(inputVals);
 
-        // Collect the net's actual output results:
-        resultVals = myNet.getResults();
-        showsvectorVals("Outputs:", resultVals);
+        display("Inputs: ", inputVals);        
+        display("Outputs:", net.getResult());
 
-        // Train the net what the outputs should have been:
-        trainData.getTargetOutputs(targetVals);
-        showsvectorVals("Targets:", targetVals);
-        assert(targetVals.size() == topology.back());
-
-        myNet.backProp(targetVals);
-
-        // Report how well the training is working, average over recent samples:
+        // Train the net what the outputs should have been
+        trainData.getTargetOutput(targetVals);
+        net.backProp(targetVals); // actual train
+        display("Targets:", targetVals);
+        
+        // Report how well the training is working, average over recent samples
         std::cout << "-----------------------------------" << std::endl;
-        std::cout << "Net recent average error: " << myNet.getRecentAverageError() << std::endl;
+        std::cout << "Net recent average error: " << net.getRecentAverageError() << std::endl;
         std::cout << "-----------------------------------" << std::endl;
     }
 
