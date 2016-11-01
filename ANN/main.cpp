@@ -27,8 +27,8 @@ int main()
 
     Net net(topology);
 
-    std::vector<double> inputVals; 
-    std::vector<double> targetVals;
+    std::vector<double> input; 
+    std::vector<double> target;
 
     int pass = 0;
     while (!trainData.isEof()) 
@@ -36,19 +36,19 @@ int main()
         std::cout << std::endl << "Pass:    " << ++pass << std::endl;
 
         // Get new input data and feed it forward
-        if (trainData.getNextInput(inputVals) != topology[0]) 
+        if (trainData.getNextInput(input) != topology[0]) 
         {
             break;
         }
-        net.feedForward(inputVals);
+        net.feedForw(input);
 
-        display("Inputs: ", inputVals);        
+        display("Inputs: ", input);        
         display("Outputs:", net.getResult());
 
         // Train the net what the outputs should have been
-        trainData.getTargetOutput(targetVals);
-        net.backProp(targetVals); // actual train
-        display("Targets:", targetVals);
+        auto target = trainData.getTargetOutput();
+        net.backProp(target);         // actual training
+        display("Targets:", target);
         
         // Report how well the training is working, average over recent samples
         std::cout << "-----------------------------------" << std::endl;

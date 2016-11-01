@@ -9,10 +9,11 @@ namespace ANN
     {
     public:
         explicit Net(const std::vector<int>& topology);      
+        void                feedForw(const std::vector<double>& worldInput);
+        void                backProp(const std::vector<double>& target);
+
         std::vector<double> getResult() const;
         double              getRecentAverageError() const { return recentAverageError_; }
-        void                feedForward(const std::vector<double>& inputVals);
-        void                backProp(const std::vector<double>& targetVals);
 
     private:
         double             error_;

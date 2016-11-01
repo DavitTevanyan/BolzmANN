@@ -6,20 +6,50 @@ using namespace ANN;
 
 double Net::recentAverageSmoothingFactor_ = 100.0; // Number of training samples to average over
 
-std::vector<double> Net::getResult() const
+Net::Net(const std::vector<int>& topology)
+    : error_(0.0), recentAverageError_(0.0)
 {
-    std::vector<double> result;
+    size_t numLayers = topology.size();
 
-    const auto&  backLayer = layers_.back();
-
-    auto   it  = backLayer.begin();
-    for (; it != backLayer.end() - 1; ++it)
+    for (int i = 0; i < numLayers; ++i)
     {
-        result.emplace_back(it->outputVal());
+        layers_.emplace_back(Layer());
+        const int numOutputs = (i == topology.size() - 1) ? 0 : topology[i + 1];
+
+        // Fill layer with neurons; last neuron is bias
+        const auto L = topology[i];
+        for (int id = 0; id <= L; ++id)
+        {
+            layers_.back().emplace_back(Neuron(numOutputs, id));
+        }
+
+        // Force the bias node's output to 1.0 (it was the last neuron pushed in this layer)
+        layers_.back().back().setOutput(1.0);
     }
-    return result;
 }
-void Net::backProp(const std::vector<double>& targetVals)
+
+void Net::feedForw(const std::vector<double>& worldInput)
+{
+    assert(worldInput.size() == layers_[0].size() - 1);
+
+    // Assign world input values to input neurons
+    for (int i = 0; i < worldInput.size(); ++i)
+    {
+        layers_[0][i].setOutput(worldInput[i]);
+    }
+
+    // Forward propagate
+    for (int i = 1; i < layers_.size(); ++i)
+    {
+        Layer& prevLayer = layers_[i - 1];
+        for (int n = 0; n < layers_[i].size() - 1; ++n)
+        {
+            layers_[i][n].activate(prevLayer);
+        }
+    }
+}
+
+void Net::backProp(const std::vector<double>& target)
 {
     // Calculate overall net error (RMS of output neuron errors)
     auto& outputLayer = layers_.back();
@@ -27,7 +57,7 @@ void Net::backProp(const std::vector<double>& targetVals)
 
     for (int n = 0; n < outputLayer.size() - 1; ++n) 
     {
-        double delta = targetVals[n] - outputLayer[n].outputVal();
+        double delta = target[n] - outputLayer[n].getOutput();
         error_ += delta * delta;
     }
     error_ /= outputLayer.size() - 1; // get average error squared
@@ -40,7 +70,7 @@ void Net::backProp(const std::vector<double>& targetVals)
     // Calculate output layer gradients
     for (int n = 0; n < outputLayer.size() - 1; ++n) 
     {
-        outputLayer[n].calcOutputGradients(targetVals[n]);
+        outputLayer[n].calcOutputGradients(target[n]);
     }
 
     // Calculate hidden layer gradients
@@ -55,8 +85,8 @@ void Net::backProp(const std::vector<double>& targetVals)
         }
     }
 
-    // For all layers from outputs to first hidden layer,
-    // update connection weights
+    // Update connection weights
+    // for all layers from output to first hidden layer
     for (size_t i = layers_.size() - 1; i > 0; --i) 
     {
         Layer& layer     = layers_[i];
@@ -69,45 +99,16 @@ void Net::backProp(const std::vector<double>& targetVals)
     }
 }
 
-void Net::feedForward(const std::vector<double>& inputVals)
+std::vector<double> Net::getResult() const
 {
-    assert(inputVals.size() == layers_[0].size() - 1);
+    std::vector<double> result;
 
-    // Assign (latch) the input values into the input neurons
-    for (int i = 0; i < inputVals.size(); ++i) 
+    const auto& backLayer = layers_.back();
+
+    auto   itNeuron  = backLayer.begin();
+    for (; itNeuron != backLayer.end() - 1; ++itNeuron)
     {
-        layers_[0][i].setOutputVal(inputVals[i]);
+        result.emplace_back(itNeuron->getOutput());
     }
-
-    // Forward propagate
-    for (int i = 1; i < layers_.size(); ++i) 
-    {
-        Layer& prevLayer  = layers_[i - 1];
-        for (int n = 0; n < layers_[i].size() - 1; ++n) 
-        {
-            layers_[i][n].feedForward(prevLayer);
-        }
-    }
-}
-
-Net::Net(const std::vector<int>& topology) : error_(0.0), recentAverageError_(0.0)
-{
-    size_t numLayers = topology.size();
-
-    for (int i = 0; i < numLayers; ++i) 
-    {
-        layers_.emplace_back(Layer());
-        const int numOutputs = i == topology.size() - 1 ? 0 : topology[i + 1];
-
-        // Fill layer with neurons and add a bias neuron in each layer
-        const auto L = topology[i];
-        for (int neuronId = 0; neuronId <= L; ++neuronId)
-        {
-            layers_.back().emplace_back(Neuron(numOutputs, neuronId));
-            std::cout << "Neuron made." << std::endl;
-        }
-
-        // Force the bias node's output to 1.0 (it was the last neuron pushed in this layer)
-        layers_.back().back().setOutputVal(1.0);
-    }
+    return result;
 }

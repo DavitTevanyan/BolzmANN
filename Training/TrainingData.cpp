@@ -55,9 +55,9 @@ int TrainingData::getNextInput(std::vector<double>& inputVals)
     return static_cast<int>(inputVals.size());
 }
 
-int TrainingData::getTargetOutput(std::vector<double>& targetOutputVals)
+std::vector<double> TrainingData::getTargetOutput()
 {
-    targetOutputVals.clear();
+    std::vector<double> targetOutputVals;
 
     std::string line;
     getline(trainingDataFile_, line);
@@ -74,5 +74,5 @@ int TrainingData::getTargetOutput(std::vector<double>& targetOutputVals)
         }
     }
 
-    return static_cast<int>(targetOutputVals.size());
+    return targetOutputVals;
 }
