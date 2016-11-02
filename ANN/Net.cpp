@@ -53,7 +53,7 @@ void Net::backProp(const std::vector<double>& target)
 {
     // Calculate overall net error (RMS of output neuron errors)
     auto& outputLayer = layers_.back();
-    error_ = 0.0;
+    error_ = 0.0; // reset for each backpropagation
 
     for (int n = 0; n < outputLayer.size() - 1; ++n) 
     {
@@ -63,7 +63,7 @@ void Net::backProp(const std::vector<double>& target)
     error_ /= outputLayer.size() - 1; // get average error squared
     error_ = sqrt(error_);            // RMS
 
-    // Implement a recent average measurement
+    // Implement a recent average measurement [for displaying, not related to learning]
     recentAverageError_ = (recentAverageError_ * recentAverageSmoothingFactor_ + error_)
                         / (                      recentAverageSmoothingFactor_ + 1.0);
 

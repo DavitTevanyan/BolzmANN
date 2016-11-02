@@ -23,7 +23,7 @@ namespace ANN
 		void   calcHiddenGradients(const Layer& nextLayer);
 		void   updateInputWeights(Layer& prevLayer);
 
-        void   setOutput(const double val) { output_ = val; }
+        void   setOutput(const double val) { output_ = val;  }
         double getOutput() const           { return output_; }
 
 	private:
