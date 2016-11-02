@@ -27,8 +27,9 @@ namespace ANN
         double getOutput() const           { return output_; }
 
 	private:
-		static double activationFunction(const double x);
-		static double activationFunctionDerivative(const double x);
+		static double activationFunction(const double x);           // for forward  propagation
+		static double activationFunctionDerivative(const double x); // for backward propagation
+
 		       double sumDOW(const Layer& nextLayer) const;
 
         static double           eta;             // [0.0..1.0] overall net training rate

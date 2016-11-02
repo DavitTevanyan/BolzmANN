@@ -8,6 +8,7 @@ namespace ANN
     class Net
     {
     public:
+        enum { INPUT };
         explicit Net(const std::vector<int>& topology);      
         void                feedForw(const std::vector<double>& worldInput);
         void                backProp(const std::vector<double>& target);

@@ -2,8 +2,8 @@
 
 using namespace ANN;
 
-double Neuron::eta   = 0.15;  // overall net learning rate, [0.0..1.0]
-double Neuron::alpha = 0.5;   // momentum, multiplier of last deltaWeight, [0.0..1.0]
+double Neuron::eta   = 0.15;  // overall net learning rate,                range [0.0, 1.0]
+double Neuron::alpha = 0.5;   // momentum, multiplier of last deltaWeight, range [0.0, 1.0]
 
 Neuron::Neuron(int numOutputs, int myId)
     : output_(0.0), gradient_(0.0), id_(myId)
@@ -22,10 +22,35 @@ void Neuron::activate(const Layer& prevLayer)
     // Include the bias node from the previous layer.
     for (const auto& neuron : prevLayer)
     {
-        sum += neuron.getOutput() * neuron.connections_[id_].weight;
+        sum += neuron.getOutput() * neuron.connections_[id_].weight; // TODO: connections_[id_] inelegant
     }
 
     output_ = activationFunction(sum);
+}
+
+void Neuron::calcHiddenGradients(const Layer& nextLayer)
+{
+    // Since we don't have a target value to compare with
+    // for a hidden neuron, we take something equivalent: DOW:
+    // sum of the derivatives of the weights of the next layer 
+    const double dow = sumDOW(nextLayer);
+    gradient_  = dow * activationFunctionDerivative(output_);
+}
+
+void Neuron::calcOutputGradients(const double targetVal)
+{
+    const double delta = targetVal - output_;
+    gradient_  = delta * activationFunctionDerivative(output_);
+}
+
+double Neuron::activationFunction(const double x)
+{
+    return tanh(x); // gives an output range of [-1.0, 1.0]
+}
+
+double Neuron::activationFunctionDerivative(const double x)
+{
+    return 1.0 - x * x; // tanh derivative (quick approximation)
 }
 
 void Neuron::updateInputWeights(Layer& prevLayer)
@@ -43,37 +68,16 @@ void Neuron::updateInputWeights(Layer& prevLayer)
     }
 }
 
-void Neuron::calcHiddenGradients(const Layer& nextLayer)
-{
-    const double dow = sumDOW(nextLayer);
-    gradient_  = dow * activationFunctionDerivative(output_);
-}
-
-void Neuron::calcOutputGradients(const double targetVal)
-{
-    const double delta = targetVal - output_;
-    gradient_  = delta * activationFunctionDerivative(output_);
-}
-
+// Sum of the derivatives of the weights of the next layer
 double Neuron::sumDOW(const Layer& nextLayer) const
 {
     double sum = 0.0;
 
-    // Sum our contributions of the errors at the nodes we feed.
+    // Sum our contributions to the errors of the nodes we feed
     for (int n = 0; n < nextLayer.size() - 1; ++n)
     {
         sum += connections_[n].weight * nextLayer[n].gradient_;
     }
 
     return sum;
-}
-
-double Neuron::activationFunction(const double x)
-{
-    return tanh(x); // tanh - output range [-1.0..1.0]
-}
-
-double Neuron::activationFunctionDerivative(const double x)
-{
-    return 1.0 - x * x; // tanh derivative
 }
