@@ -3,56 +3,32 @@
 
 using namespace ANN;
 
-std::vector<int> TrainingData::getTopology()
+TrainingData::TrainingData(const std::string& fileName)
+    : trainingDataFile_(fileName.c_str())
 {
-    std::vector<int> topology;
-    std::string      line;
-
-    getline(trainingDataFile_, line);
-    std::stringstream ss(line);
-
-    std::string label;
-    ss >> label;
-    if (isEof() || label != "topology:") 
-    {
-        abort();
-    }
-
-    while (!ss.eof()) 
-    {
-        int n;
-        ss >> n;
-        topology.emplace_back(n);
-    }
-
-    return topology;
+    // nothing
 }
 
-TrainingData::TrainingData(const std::string& filename)
+std::vector<double> TrainingData::getNextInput()
 {
-    trainingDataFile_.open(filename.c_str());
-}
-
-int TrainingData::getNextInput(std::vector<double>& inputVals)
-{
-    inputVals.clear();
+    std::vector<double> input;
 
     std::string line;
     getline(trainingDataFile_, line);
-    std::stringstream ss(line);
+    std::stringstream strmLine(line);
 
     std::string label;
-    ss >> label;
+    strmLine >> label;
     if (label == "in:")
     {
-        double oneValue;
-        while (ss >> oneValue) 
+        double value;
+        while (strmLine >> value) 
         {
-            inputVals.emplace_back(oneValue);
+            input.emplace_back(value);
         }
     }
 
-    return static_cast<int>(inputVals.size());
+    return input;
 }
 
 std::vector<double> TrainingData::getTargetOutput()

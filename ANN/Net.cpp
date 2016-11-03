@@ -14,13 +14,13 @@ Net::Net(const std::vector<int>& topology)
     for (int i = 0; i < numLayers; ++i)
     {
         layers_.emplace_back(Layer());
-        const int numOutputs = (i == topology.size() - 1) ? 0 : topology[i + 1];
+        const int numOutputs = (i == topology.size() - 1) ? 0 : topology[i + 1]; // fully connected net
 
         // Fill layer with neurons; last neuron is bias
         const auto L = topology[i];
-        for (int id = 0; id <= L; ++id)
+        for (int idxL = 0; idxL <= L; ++idxL)
         {
-            layers_.back().emplace_back(Neuron(numOutputs, id));
+            layers_.back().emplace_back(Neuron(numOutputs, idxL));
         }
 
         // Force the bias node's output to 1.0 (it was the last neuron pushed in this layer)
@@ -30,18 +30,18 @@ Net::Net(const std::vector<int>& topology)
 
 void Net::feedForw(const std::vector<double>& worldInput)
 {
-    assert(worldInput.size() == layers_[0].size() - 1);
+//    assert(worldInput.size() == layers_[INPUT].size() - 1);
 
     // Assign world input values to input neurons
-    for (int i = 0; i < worldInput.size(); ++i)
+    for (int n = 0; n < worldInput.size(); ++n)
     {
-        layers_[0][i].setOutput(worldInput[i]);
+        layers_[INPUT][n].setOutput(worldInput[n]);
     }
 
     // Forward propagate
     for (int i = 1; i < layers_.size(); ++i)
     {
-        Layer& prevLayer = layers_[i - 1];
+        Layer& prevLayer  = layers_[i - 1];
         for (int n = 0; n < layers_[i].size() - 1; ++n)
         {
             layers_[i][n].activate(prevLayer);
@@ -60,7 +60,7 @@ void Net::backProp(const std::vector<double>& target)
         double delta = target[n] - outputLayer[n].getOutput();
         error_ += delta * delta;
     }
-    error_ /= outputLayer.size() - 1; // get average error squared
+    error_ /= outputLayer.size() - 1; // average
     error_ = sqrt(error_);            // RMS
 
     // Implement a recent average measurement [for displaying, not related to learning]

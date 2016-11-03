@@ -1,16 +1,18 @@
 #include "Neuron.h"
+#include <iostream>
 
 using namespace ANN;
 
 double Neuron::eta   = 0.15;  // overall net learning rate,                range [0.0, 1.0]
 double Neuron::alpha = 0.5;   // momentum, multiplier of last deltaWeight, range [0.0, 1.0]
 
-Neuron::Neuron(int numOutputs, int myId)
-    : output_(0.0), gradient_(0.0), id_(myId)
+Neuron::Neuron(int numOutputs, int myIdxL)
+    : output_(0.0), gradient_(0.0), idxL_(myIdxL)
 {
+    std::cout << "Neuron with id " << myIdxL << " created\n";
     for (int i = 0; i < numOutputs; ++i)
     {
-        connections_.emplace_back(Connection());
+        connectionsOut_.emplace_back(Connection());
     }
 }
 
@@ -18,14 +20,20 @@ void Neuron::activate(const Layer& prevLayer)
 {
     double sum = 0.0;
 
-    // Sum the previous layer's outputs (which are our inputs)
-    // Include the bias node from the previous layer.
+    // Sum the previous layer's outputs (which are our inputs),
+    // including the bias node of the previous layer
     for (const auto& neuron : prevLayer)
     {
-        sum += neuron.getOutput() * neuron.connections_[id_].weight; // TODO: connections_[id_] inelegant
+        sum += neuron.getOutput() * neuron.connectionsOut_[idxL_].weight; // TODO: connectionsOut_[idxL_] inelegant
     }
 
     output_ = activationFunction(sum);
+}
+
+void Neuron::calcOutputGradients(const double target)
+{
+    const double delta = target - output_;
+    gradient_  = delta * activationFunctionDerivative(output_);
 }
 
 void Neuron::calcHiddenGradients(const Layer& nextLayer)
@@ -35,12 +43,6 @@ void Neuron::calcHiddenGradients(const Layer& nextLayer)
     // sum of the derivatives of the weights of the next layer 
     const double dow = sumDOW(nextLayer);
     gradient_  = dow * activationFunctionDerivative(output_);
-}
-
-void Neuron::calcOutputGradients(const double targetVal)
-{
-    const double delta = targetVal - output_;
-    gradient_  = delta * activationFunctionDerivative(output_);
 }
 
 double Neuron::activationFunction(const double x)
@@ -59,12 +61,12 @@ void Neuron::updateInputWeights(Layer& prevLayer)
     // in the neurons in the preceding layer
     for (auto& neuron : prevLayer)
     {
-        double oldDeltaWeight = neuron.connections_[id_].deltaWeight;
+        double oldDeltaWeight = neuron.connectionsOut_[idxL_].deltaWeight;
         double newDeltaWeight = eta * neuron.getOutput() * gradient_ // individual input, magnified by the gradient and train rate;
                               + alpha * oldDeltaWeight;              // also add momentum = a fraction of the previous delta weight;
 
-        neuron.connections_[id_].deltaWeight = newDeltaWeight;
-        neuron.connections_[id_].weight     += newDeltaWeight;
+        neuron.connectionsOut_[idxL_].deltaWeight = newDeltaWeight;
+        neuron.connectionsOut_[idxL_].weight     += newDeltaWeight;
     }
 }
 
@@ -76,7 +78,7 @@ double Neuron::sumDOW(const Layer& nextLayer) const
     // Sum our contributions to the errors of the nodes we feed
     for (int n = 0; n < nextLayer.size() - 1; ++n)
     {
-        sum += connections_[n].weight * nextLayer[n].gradient_;
+        sum += connectionsOut_[n].weight * nextLayer[n].gradient_;
     }
 
     return sum;

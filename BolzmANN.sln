@@ -1,14 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BolzmANN", "ANN\ANN.vcxproj", "{92D248BF-78D5-4B12-9D5A-56F7F4D0F718}"
 	ProjectSection(ProjectDependencies) = postProject
 		{A5BEC979-CDC9-4574-8F6C-1376BA4314BD} = {A5BEC979-CDC9-4574-8F6C-1376BA4314BD}
+		{4C298AB0-42EF-45A5-BC2B-322DC8CFC15A} = {4C298AB0-42EF-45A5-BC2B-322DC8CFC15A}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Training", "Training\Training.vcxproj", "{A5BEC979-CDC9-4574-8F6C-1376BA4314BD}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Library", "Library\Library.vcxproj", "{4C298AB0-42EF-45A5-BC2B-322DC8CFC15A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -34,6 +37,14 @@ Global
 		{A5BEC979-CDC9-4574-8F6C-1376BA4314BD}.Release|x64.Build.0 = Release|x64
 		{A5BEC979-CDC9-4574-8F6C-1376BA4314BD}.Release|x86.ActiveCfg = Release|Win32
 		{A5BEC979-CDC9-4574-8F6C-1376BA4314BD}.Release|x86.Build.0 = Release|Win32
+		{4C298AB0-42EF-45A5-BC2B-322DC8CFC15A}.Debug|x64.ActiveCfg = Debug|x64
+		{4C298AB0-42EF-45A5-BC2B-322DC8CFC15A}.Debug|x64.Build.0 = Debug|x64
+		{4C298AB0-42EF-45A5-BC2B-322DC8CFC15A}.Debug|x86.ActiveCfg = Debug|Win32
+		{4C298AB0-42EF-45A5-BC2B-322DC8CFC15A}.Debug|x86.Build.0 = Debug|Win32
+		{4C298AB0-42EF-45A5-BC2B-322DC8CFC15A}.Release|x64.ActiveCfg = Release|x64
+		{4C298AB0-42EF-45A5-BC2B-322DC8CFC15A}.Release|x64.Build.0 = Release|x64
+		{4C298AB0-42EF-45A5-BC2B-322DC8CFC15A}.Release|x86.ActiveCfg = Release|Win32
+		{4C298AB0-42EF-45A5-BC2B-322DC8CFC15A}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -15,21 +15,15 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Neuron.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Net.cpp">
+    <ClCompile Include="SpecificUtilities.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Neuron.h">
+    <ClInclude Include="..\ANN\General.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Net.h">
+    <ClInclude Include="SpecificUtilities.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

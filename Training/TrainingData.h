@@ -12,10 +12,10 @@ namespace ANN
     public:
         explicit TrainingData(const std::string& filename);
 
-        std::vector<int>    getTopology();
-        bool                isEof() { return trainingDataFile_.eof(); }
-        int                 getNextInput(std::vector<double>& inputVals);
+        std::vector<double> getNextInput();
         std::vector<double> getTargetOutput();
+
+        bool isEof() { return trainingDataFile_.eof(); }
 
     private:
         std::ifstream trainingDataFile_;

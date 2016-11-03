@@ -1,59 +1,41 @@
 #include "TrainingData.h"
+#include "SpecificUtilities.h"
 #include "Net.h"
-#include <iostream>
-#include <cassert>
 
 using namespace ANN;
 
-void display(const std::string& label, const std::vector<double>& v)
-{
-    std::cout << label << " ";
-
-    for (const auto& elem : v) 
-    {
-        std::cout << elem << " ";
-    }
-
-    std::cout << std::endl;
-}
-
 int main()
 {
-    TrainingData trainData("trainingData.txt");
+    Net net({ 3, 2, 1 }); // topology described by the initializer-list
 
-    // e.g., { 3, 2, 1 }
-    std::vector<int> topology;
-    topology = trainData.getTopology();
-
-    Net net(topology);
-
-    std::vector<double> input; 
-    std::vector<double> target;
-
-    int pass = 0;
-    while (!trainData.isEof()) 
+    for (int i = 0; i < 200; i++)
     {
-        std::cout << std::endl << "Pass:    " << ++pass << std::endl;
+        TrainingData trainData("trainingData.txt");
 
-        // Get new input data and feed it forward
-        if (trainData.getNextInput(input) != topology[0]) 
+        while (!trainData.isEof())
         {
-            break;
+            const std::vector<double> input  = trainData.getNextInput();
+            net.feedForw(input);
+            const std::vector<double> output = net.getResult();
+            const std::vector<double> target = trainData.getTargetOutput();
+
+            if (!target.empty())
+            {
+                static double pass = 1; // double to prevent narrowing conversion below
+                display("Pass:", { pass++ }, true);
+
+                net.backProp(target); // train on what the outputs should have been
+
+                display("Input: ", input);
+                display("Target:", target);
+                display("Output:", output);
+
+                // Report how well the training is working, average over recent samples
+                std::cout << "-----------------------------------"                       << std::endl;
+                std::cout << "Net recent average error: " << net.getRecentAverageError() << std::endl;
+                std::cout << "-----------------------------------"                       << std::endl;
+            }            
         }
-        net.feedForw(input);
-
-        display("Inputs: ", input);        
-        display("Outputs:", net.getResult());
-
-        // Train the net what the outputs should have been
-        auto target = trainData.getTargetOutput();
-        net.backProp(target);         // actual training
-        display("Targets:", target);
-        
-        // Report how well the training is working, average over recent samples
-        std::cout << "-----------------------------------" << std::endl;
-        std::cout << "Net recent average error: " << net.getRecentAverageError() << std::endl;
-        std::cout << "-----------------------------------" << std::endl;
     }
 
     std::cout << std::endl << "Done" << std::endl;
