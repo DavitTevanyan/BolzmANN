@@ -9,7 +9,6 @@ double Neuron::alpha = 0.5;   // momentum, multiplier of last deltaWeight, range
 Neuron::Neuron(int numOutputs, int myIdxL)
     : output_(0.0), gradient_(0.0), idxL_(myIdxL)
 {
-    std::cout << "Neuron with id " << myIdxL << " created\n";
     for (int i = 0; i < numOutputs; ++i)
     {
         connectionsOut_.emplace_back(Connection());
@@ -23,8 +22,8 @@ void Neuron::activate(const Layer& prevLayer)
     // Sum the previous layer's outputs (which are our inputs),
     // including the bias node of the previous layer
     for (const auto& neuron : prevLayer)
-    {
-        sum += neuron.getOutput() * neuron.connectionsOut_[idxL_].weight; // TODO: connectionsOut_[idxL_] inelegant
+    {                          // TODO: connectionsOut_[idxL_] inelegant
+        sum += neuron.output() * neuron.connectionsOut_[idxL_].weight;
     }
 
     output_ = activationFunction(sum);
@@ -62,8 +61,8 @@ void Neuron::updateInputWeights(Layer& prevLayer)
     for (auto& neuron : prevLayer)
     {
         double oldDeltaWeight = neuron.connectionsOut_[idxL_].deltaWeight;
-        double newDeltaWeight = eta * neuron.getOutput() * gradient_ // individual input, magnified by the gradient and train rate;
-                              + alpha * oldDeltaWeight;              // also add momentum = a fraction of the previous delta weight;
+        double newDeltaWeight = eta * neuron.output() * gradient_ // individual input, magnified by the gradient and train rate;
+                              + alpha * oldDeltaWeight;           // also add momentum = a fraction of the previous delta weight;
 
         neuron.connectionsOut_[idxL_].deltaWeight = newDeltaWeight;
         neuron.connectionsOut_[idxL_].weight     += newDeltaWeight;

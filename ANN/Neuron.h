@@ -24,7 +24,7 @@ namespace ANN
 		void   updateInputWeights(Layer& prevLayer);
 
         void   setOutput(const double val) { output_ = val;  }
-        double getOutput() const           { return output_; }
+        double output() const           { return output_; }
 
 	private:
 		static double activationFunction(const double x);           // for forward  propagation

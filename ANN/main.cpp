@@ -8,7 +8,7 @@ int main()
 {
     Net net({ 3, 2, 1 }); // topology described by the initializer-list
 
-    for (int i = 0; i < 200; i++)
+    for (int i = 0; i < 100; i++)
     {
         TrainingData trainData("trainingData.txt");
 

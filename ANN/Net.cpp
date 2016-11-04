@@ -57,7 +57,7 @@ void Net::backProp(const std::vector<double>& target)
 
     for (int n = 0; n < outputLayer.size() - 1; ++n) 
     {
-        double delta = target[n] - outputLayer[n].getOutput();
+        double delta = target[n] - outputLayer[n].output();
         error_ += delta * delta;
     }
     error_ /= outputLayer.size() - 1; // average
@@ -89,12 +89,11 @@ void Net::backProp(const std::vector<double>& target)
     // for all layers from output to first hidden layer
     for (size_t i = layers_.size() - 1; i > 0; --i) 
     {
-        Layer& layer     = layers_[i];
         Layer& prevLayer = layers_[i - 1];
 
-        for (int n = 0; n < layer.size() - 1; ++n) 
+        for (int n = 0; n < layers_[i].size() - 1; ++n) 
         {
-            layer[n].updateInputWeights(prevLayer);
+            layers_[i][n].updateInputWeights(prevLayer);
         }
     }
 }
@@ -108,7 +107,7 @@ std::vector<double> Net::getResult() const
     auto   itNeuron  = backLayer.begin();
     for (; itNeuron != backLayer.end() - 1; ++itNeuron)
     {
-        result.emplace_back(itNeuron->getOutput());
+        result.emplace_back(itNeuron->output());
     }
     return result;
 }
