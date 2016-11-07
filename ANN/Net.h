@@ -14,13 +14,13 @@ namespace ANN
         void                backProp(const std::vector<double>& target);
 
         std::vector<double> getResult() const;
-        double              getRecentAverageError() const { return recentAverageError_; }
+        double              averageError() const { return averageError_; }
 
     private:
         double             error_;
-        double             recentAverageError_;
+        double             averageError_;
         std::vector<Layer> layers_;                       // layers_[layerNum][neuronNum]
-        static double      recentAverageSmoothingFactor_;
+        static double      averageSmoothingFactor_;
     };
 }
 

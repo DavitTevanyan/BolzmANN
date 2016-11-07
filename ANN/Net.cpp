@@ -4,10 +4,10 @@
 
 using namespace ANN;
 
-double Net::recentAverageSmoothingFactor_ = 100.0; // Number of training samples to average over
+double Net::averageSmoothingFactor_ = 100.0; // Number of training samples to average over
 
 Net::Net(const std::vector<int>& topology)
-    : error_(0.0), recentAverageError_(0.0)
+    : error_(0.0), averageError_(0.0)
 {
     size_t numLayers = topology.size();
 
@@ -64,8 +64,8 @@ void Net::backProp(const std::vector<double>& target)
     error_ = sqrt(error_);            // RMS
 
     // Implement a recent average measurement [for displaying, not related to learning]
-    recentAverageError_ = (recentAverageError_ * recentAverageSmoothingFactor_ + error_)
-                        / (                      recentAverageSmoothingFactor_ + 1.0);
+    averageError_ = (averageError_ * averageSmoothingFactor_ + error_)
+                  / (                averageSmoothingFactor_ + 1.0);
 
     // Calculate output layer gradients
     for (int n = 0; n < outputLayer.size() - 1; ++n) 
@@ -102,12 +102,10 @@ std::vector<double> Net::getResult() const
 {
     std::vector<double> result;
 
-    const auto& backLayer = layers_.back();
+    for (const auto& neuron : layers_.back())
+        result.push_back(neuron.output());
 
-    auto   itNeuron  = backLayer.begin();
-    for (; itNeuron != backLayer.end() - 1; ++itNeuron)
-    {
-        result.emplace_back(itNeuron->output());
-    }
+    result.pop_back(); // remove bias neuron
+
     return result;
 }

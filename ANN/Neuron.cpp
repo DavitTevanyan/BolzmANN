@@ -3,15 +3,15 @@
 
 using namespace ANN;
 
-double Neuron::eta   = 0.15;  // overall net learning rate,                range [0.0, 1.0]
-double Neuron::alpha = 0.5;   // momentum, multiplier of last deltaWeight, range [0.0, 1.0]
+double Neuron::rate     = 0.25;  // overall net learning rate,                range [0.0, 1.0]
+double Neuron::momentum = 0.5;   // momentum, multiplier of last deltaWeight, range [0.0, 1.0]
 
 Neuron::Neuron(int numOutputs, int myIdxL)
     : output_(0.0), gradient_(0.0), idxL_(myIdxL)
 {
     for (int i = 0; i < numOutputs; ++i)
     {
-        connectionsOut_.emplace_back(Connection());
+        axon_.emplace_back(Connection());
     }
 }
 
@@ -22,8 +22,8 @@ void Neuron::activate(const Layer& prevLayer)
     // Sum the previous layer's outputs (which are our inputs),
     // including the bias node of the previous layer
     for (const auto& neuron : prevLayer)
-    {                          // TODO: connectionsOut_[idxL_] inelegant
-        sum += neuron.output() * neuron.connectionsOut_[idxL_].weight;
+    {                          // TODO: axon_[idxL_] inelegant
+        sum += neuron.output() * neuron.axon_[idxL_].weight;
     }
 
     output_ = activationFunction(sum);
@@ -60,12 +60,12 @@ void Neuron::updateInputWeights(Layer& prevLayer)
     // in the neurons in the preceding layer
     for (auto& neuron : prevLayer)
     {
-        double oldDeltaWeight = neuron.connectionsOut_[idxL_].deltaWeight;
-        double newDeltaWeight = eta * neuron.output() * gradient_ // individual input, magnified by the gradient and train rate;
-                              + alpha * oldDeltaWeight;           // also add momentum = a fraction of the previous delta weight;
+        double oldDeltaWeight = neuron.axon_[idxL_].deltaWeight;
+        double newDeltaWeight = rate * neuron.output() * gradient_ // individual input, magnified by the gradient and train rate;
+                              + momentum * oldDeltaWeight;         // also add momentum = a fraction of the previous delta weight;
 
-        neuron.connectionsOut_[idxL_].deltaWeight = newDeltaWeight;
-        neuron.connectionsOut_[idxL_].weight     += newDeltaWeight;
+        neuron.axon_[idxL_].deltaWeight = newDeltaWeight;
+        neuron.axon_[idxL_].weight     += newDeltaWeight;
     }
 }
 
@@ -77,7 +77,7 @@ double Neuron::sumDOW(const Layer& nextLayer) const
     // Sum our contributions to the errors of the nodes we feed
     for (int n = 0; n < nextLayer.size() - 1; ++n)
     {
-        sum += connectionsOut_[n].weight * nextLayer[n].gradient_;
+        sum += axon_[n].weight * nextLayer[n].gradient_;
     }
 
     return sum;

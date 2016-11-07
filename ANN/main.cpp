@@ -8,7 +8,6 @@ int main()
 {
     Net net({ 3, 2, 1 }); // topology described by the initializer-list
 
-    for (int i = 0; i < 100; i++)
     {
         TrainingData trainData("trainingData.txt");
 
@@ -21,19 +20,16 @@ int main()
 
             if (!target.empty())
             {
-                static double pass = 1; // double to prevent narrowing conversion below
+                static double pass = 1;
                 display("Pass:", { pass++ }, true);
 
-                net.backProp(target); // train on what the outputs should have been
+                net.backProp(target);
 
                 display("Input: ", input);
                 display("Target:", target);
                 display("Output:", output);
 
-                // Report how well the training is working, average over recent samples
-                std::cout << "-----------------------------------"                       << std::endl;
-                std::cout << "Net recent average error: " << net.getRecentAverageError() << std::endl;
-                std::cout << "-----------------------------------"                       << std::endl;
+                displayNetError(net.averageError());
             }            
         }
     }

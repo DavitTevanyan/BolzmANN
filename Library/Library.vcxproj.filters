@@ -20,10 +20,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\ANN\General.h">
+    <ClInclude Include="SpecificUtilities.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SpecificUtilities.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

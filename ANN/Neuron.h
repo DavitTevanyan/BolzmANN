@@ -32,12 +32,12 @@ namespace ANN
 
 		       double sumDOW(const Layer& nextLayer) const;
 
-        static double           eta;             // [0.0..1.0] overall net training rate
-        static double           alpha;           // [0.0..n] multiplier of last weight change (momentum)
+        static double           rate;             // [0.0..1.0] overall net training rate
+        static double           momentum;           // [0.0..n] multiplier of last weight change (momentum)
         double                  output_;
 		double                  gradient_;
         int                     idxL_;
-        std::vector<Connection> connectionsOut_;
+        std::vector<Connection> axon_;
 	};
 }
 

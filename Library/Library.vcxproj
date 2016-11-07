@@ -110,7 +110,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\ANN\General.h" />
+    <ClInclude Include="General.h" />
     <ClInclude Include="SpecificUtilities.h" />
   </ItemGroup>
   <ItemGroup>
