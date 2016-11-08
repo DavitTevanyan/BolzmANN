@@ -22,9 +22,7 @@ void Neuron::activate(const Layer& prevLayer)
     // Sum the previous layer's outputs (which are our inputs),
     // including the bias node of the previous layer
     for (const auto& neuron : prevLayer)
-    {                          // TODO: axon_[idxL_] inelegant
-        sum += neuron.output() * neuron.axon_[idxL_].weight;
-    }
+        sum += neuron.output() * neuron.axon_[idxL_].weight; // inelegant
 
     output_ = activationFunction(sum);
 }
@@ -44,7 +42,7 @@ void Neuron::calcHiddenGradients(const Layer& nextLayer)
     gradient_  = dow * activationFunctionDerivative(output_);
 }
 
-double Neuron::activationFunction(const double x)
+double Neuron::activationFunction(double x)
 {
     return tanh(x); // gives an output range of [-1.0, 1.0]
 }

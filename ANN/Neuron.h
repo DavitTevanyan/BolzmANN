@@ -23,20 +23,20 @@ namespace ANN
 		void   calcHiddenGradients(const Layer& nextLayer);
 		void   updateInputWeights(Layer& prevLayer);
 
-        void   setOutput(const double val) { output_ = val;  }
-        double output() const           { return output_; }
+        void   setOutput(double val) { output_ = val;  }
+        double output() const        { return output_; }
 
 	private:
-		static double activationFunction(const double x);           // for forward  propagation
-		static double activationFunctionDerivative(const double x); // for backward propagation
+		static double activationFunction(double x);           // for forward  propagation
+		static double activationFunctionDerivative(double x); // for backward propagation
 
 		       double sumDOW(const Layer& nextLayer) const;
 
-        static double           rate;             // [0.0..1.0] overall net training rate
-        static double           momentum;           // [0.0..n] multiplier of last weight change (momentum)
-        double                  output_;
-		double                  gradient_;
-        int                     idxL_;
+        static double           rate;     // [0.0, 1.0] overall net learning rate
+        static double           momentum; // [0.0, n] multiplier of last weight change (momentum)
+               double           output_;
+		       double           gradient_;
+        const  int              idxL_;
         std::vector<Connection> axon_;
 	};
 }

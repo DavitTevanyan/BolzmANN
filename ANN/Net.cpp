@@ -38,7 +38,8 @@ void Net::feedForw(const std::vector<double>& worldInput)
         layers_[INPUT][n].setOutput(worldInput[n]);
     }
 
-    // Forward propagate
+    // Forward propagate: activate every neuron
+    // in every layer except input layer neurons
     for (int i = 1; i < layers_.size(); ++i)
     {
         Layer& prevLayer  = layers_[i - 1];
