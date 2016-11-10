@@ -5,13 +5,8 @@
 
 namespace ANN
 {
-	struct Connection
-	{
-		double weight = rand() / double(RAND_MAX);
-		double deltaWeight;
-	};
-
-	class Neuron;
+	class   Neuron;
+    struct  Connection;
 	typedef std::vector<Neuron> Layer;
 
 	class Neuron
@@ -32,13 +27,20 @@ namespace ANN
 
 		       double sumDOW(const Layer& nextLayer) const;
 
-        static double           rate;     // [0.0, 1.0] overall net learning rate
-        static double           momentum; // [0.0, n] multiplier of last weight change (momentum)
-               double           output_;
-		       double           gradient_;
-        const  int              idxL_;
+        static double rate;     // [0.0, 1.0] overall net learning rate
+        static double momentum; // [0.0,   n] multiplier of last weight change (momentum)
+               double output_;
+		       double gradient_;
+        const  int    idxL_;
+
         std::vector<Connection> axon_;
 	};
+
+    struct Connection
+    {
+        double weight = rand() / double(RAND_MAX);
+        double deltaWeight;
+    };
 }
 
 #endif // NEURON_H

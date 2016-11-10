@@ -110,5 +110,12 @@ struct Queue : std::queue<T>
     }
 };
 
+///////////////////////////// FREE FUNCTIONS
+
+std::string strip_whitespace(std::string s)
+{
+    s.erase(std::remove_if(s.begin(), s.end(), [](char c) { return std::isspace(c); }), s.end());
+}
+
 #endif // LIBRARY_H
 

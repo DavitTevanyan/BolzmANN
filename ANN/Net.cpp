@@ -16,7 +16,8 @@ Net::Net(const std::vector<int>& topology)
         layers_.emplace_back(Layer());
         const int numOutputs = (i == topology.size() - 1) ? 0 : topology[i + 1]; // fully connected net
 
-        // Fill layer with neurons; last neuron is bias
+        // Fill layer with neurons;
+        // last neuron is bias
         const auto L = topology[i];
         for (int idxL = 0; idxL <= L; ++idxL)
         {
@@ -30,7 +31,7 @@ Net::Net(const std::vector<int>& topology)
 
 void Net::feedForw(const std::vector<double>& worldInput)
 {
-//    assert(worldInput.size() == layers_[INPUT].size() - 1);
+    assert(worldInput.size() == layers_[INPUT].size() - 1);
 
     // Assign world input values to input neurons
     for (int n = 0; n < worldInput.size(); ++n)
