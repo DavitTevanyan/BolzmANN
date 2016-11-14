@@ -114,6 +114,7 @@ struct Queue : std::queue<T>
 
 ///////////////////////////// FREE FUNCTIONS
 
+inline std::string peek_next_line(std::stringstream& ss)
 {
     std::string nextLine = "";
     const std::stringstream::pos_type pos = ss.tellg();
