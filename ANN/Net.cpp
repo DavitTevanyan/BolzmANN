@@ -9,22 +9,21 @@ double Net::averageSmoothingFactor_ = 100.0; // Number of training samples to av
 Net::Net(const std::vector<int>& topology)
     : error_(0.0), averageError_(0.0)
 {
-    size_t numLayers = topology.size();
+    const size_t numLayers = topology.size();
 
     for (int i = 0; i < numLayers; ++i)
     {
         layers_.emplace_back(Layer());
-        const int numOutputs = (i == topology.size() - 1) ? 0 : topology[i + 1]; // fully connected net
+        const int neuronOutputs = (i == topology.size() - 1) ? 0 : topology[i + 1]; // fully connected net
 
-        // Fill layer with neurons;
-        // last neuron is bias
+        // Fill layer with neurons; last neuron is bias
         const auto L = topology[i];
         for (int idxL = 0; idxL <= L; ++idxL)
         {
-            layers_.back().emplace_back(Neuron(numOutputs, idxL));
+            layers_.back().emplace_back(Neuron(neuronOutputs, idxL));
         }
 
-        // Force the bias node's output to 1.0 (it was the last neuron pushed in this layer)
+        // Bias is last neuron, fixed output
         layers_.back().back().setOutput(1.0);
     }
 }

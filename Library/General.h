@@ -1,7 +1,9 @@
 #ifndef LIBRARY_H
 #define LIBRARY_H
 
+#include <sstream>
 #include <vector>
+#include <cctype>
 #include <list>
 #include <map>
 #include <set>
@@ -112,7 +114,16 @@ struct Queue : std::queue<T>
 
 ///////////////////////////// FREE FUNCTIONS
 
-std::string strip_whitespace(std::string s)
+{
+    std::string nextLine = "";
+    const std::stringstream::pos_type pos = ss.tellg();
+    if (ss.peek() != EOF)
+        std::getline(ss, nextLine);
+    ss.seekg(pos);
+    return nextLine;
+}
+
+inline std::string strip_whitespace(std::string s)
 {
     s.erase(std::remove_if(s.begin(), s.end(), [](char c) { return std::isspace(c); }), s.end());
 }
