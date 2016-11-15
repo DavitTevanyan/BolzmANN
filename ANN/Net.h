@@ -5,15 +5,15 @@
 
 namespace ANN
 {
-    class Net
+    class Ann
     {
     public:
         enum { INPUT };
-        explicit Net(const std::vector<int>& topology);      
+        explicit Ann(const std::vector<int>& topology);      
         void                feedForw(const std::vector<double>& worldInput);
         void                backProp(const std::vector<double>& target);
 
-        std::vector<double> getResult() const;
+        std::vector<double> getOutput() const;
         double              averageError() const { return averageError_; }
 
     private:

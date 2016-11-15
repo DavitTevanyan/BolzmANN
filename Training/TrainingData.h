@@ -7,13 +7,20 @@
 
 namespace ANN
 {
+    static double pass = 1;
+
+    struct Data {
+        std::vector<double> input;
+        std::vector<double> target;
+    };
+
     class TrainingData
     {
     public:
         explicit TrainingData(const std::string& filename);
 
         std::vector<double> getNextInput();
-        std::vector<double> getTargetOutput();
+        std::vector<double> getNextTarget();
 
         bool isEof() { return trainingDataFile_.eof(); }
 

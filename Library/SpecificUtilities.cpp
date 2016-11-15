@@ -17,6 +17,6 @@ void displayNetError(const double error)
 {
     // Report how well the training is working, average over recent samples
     std::cout << "-----------------------------------" << std::endl;
-    std::cout << "Net recent average error: " << error << std::endl;
+    std::cout << "Ann recent average error: " << error << std::endl;
     std::cout << "-----------------------------------" << std::endl;
 }

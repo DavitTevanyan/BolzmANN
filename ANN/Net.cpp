@@ -4,10 +4,10 @@
 
 using namespace ANN;
 
-double Net::averageSmoothingFactor_ = 100.0; // Number of training samples to average over
+double Ann::averageSmoothingFactor_ = 100.0; // Number of training samples to average over
 
-Net::Net(const std::vector<int>& topology)
-    : error_(0.0), averageError_(0.0)
+Ann::Ann(const std::vector<int>& topology)
+    : error_(0.0), averageError_(5.0)
 {
     const size_t numLayers = topology.size();
 
@@ -28,7 +28,7 @@ Net::Net(const std::vector<int>& topology)
     }
 }
 
-void Net::feedForw(const std::vector<double>& worldInput)
+void Ann::feedForw(const std::vector<double>& worldInput)
 {
     assert(worldInput.size() == layers_[INPUT].size() - 1);
 
@@ -50,7 +50,7 @@ void Net::feedForw(const std::vector<double>& worldInput)
     }
 }
 
-void Net::backProp(const std::vector<double>& target)
+void Ann::backProp(const std::vector<double>& target)
 {
     // Calculate overall net error (RMS of output neuron errors)
     auto& outputLayer = layers_.back();
@@ -99,7 +99,7 @@ void Net::backProp(const std::vector<double>& target)
     }
 }
 
-std::vector<double> Net::getResult() const
+std::vector<double> Ann::getOutput() const
 {
     std::vector<double> result;
 

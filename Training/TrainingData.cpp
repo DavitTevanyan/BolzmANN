@@ -31,7 +31,7 @@ std::vector<double> TrainingData::getNextInput()
     return input;
 }
 
-std::vector<double> TrainingData::getTargetOutput()
+std::vector<double> TrainingData::getNextTarget()
 {
     std::vector<double> targetOutputVals;
 
