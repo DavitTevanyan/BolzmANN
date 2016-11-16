@@ -8,7 +8,7 @@ int main()
 {
     auto trainSet = getTrainSet();
 
-    Ann ann({ 2, 3, 1 }); // topology by initializer-list
+    Ann ann({ 2, 2, 3, 1 }); // topology by initializer-list
     
     while (ann.averageError() > 0.05)
     {
