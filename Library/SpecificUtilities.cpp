@@ -13,10 +13,11 @@ void display(const std::string& label, const std::vector<double>& v, bool alignR
     std::cout << std::endl;
 }
 
-void displayNetError(const double error)
+void displayStats(const double error, const double pass)
 {
     // Report how well the training is working, average over recent samples
     std::cout << "-----------------------------------" << std::endl;
-    std::cout << "Ann recent average error: " << error << std::endl;
+    std::cout << "              Pass: " << pass        << std::endl;
+    std::cout << " Ann average error: " << error       << std::endl;
     std::cout << "-----------------------------------" << std::endl;
 }

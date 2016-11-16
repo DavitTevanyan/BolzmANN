@@ -10,6 +10,6 @@
 const bool alignRight = true;
 
 void display(const std::string& label, const std::vector<double>& v, bool alignRight = false);
-void displayNetError(const double d);
+void displayStats(const double d, const double pass);
 
 #endif // SPECIFIC_UTILITIES_H

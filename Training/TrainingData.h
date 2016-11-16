@@ -14,6 +14,8 @@ namespace ANN
         std::vector<double> target;
     };
 
+    std::vector<Data> getTrainSet();
+
     class TrainingData
     {
     public:

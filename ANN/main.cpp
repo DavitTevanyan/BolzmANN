@@ -6,30 +6,28 @@ using namespace ANN;
 
 int main()
 {
-    TrainingData data("trainingData.txt");
-    std::vector<Data> trainSets;
-    while (!data.isEof())
-        trainSets.push_back({ data.getNextInput(), data.getNextTarget() });
+    auto trainSet = getTrainSet();
 
-    Ann ann({ 2, 2, 1 }); // topology described by initializer-list
+    Ann ann({ 2, 3, 1 }); // topology by initializer-list
     
     while (ann.averageError() > 0.05)
     {
-        for (const auto& set : trainSets)
+        for (const auto& sample : trainSet)
         {
-            ann.feedForw(set.input);
-            ann.backProp(set.target);
-
-            display("Pass:", { pass++ }, alignRight);
-            display("Input: ", set.input);
-            display("Target:", set.target);
-            display("Output:", ann.getOutput());
-            displayNetError(ann.averageError());
+            pass++;
+            ann.feedForw(sample.input);
+            ann.backProp(sample.target);
         }
     }
 
-//    display("Pass:", { pass }, alignRight);
-//    displayNetError(ann.averageError());
+    for (const auto& sample : trainSet)
+    {
+        ann.feedForw(sample.input);
 
-    std::cout << std::endl << "Done" << std::endl;
+        display("Input: ", sample.input);
+        display("Target:", sample.target);
+        display("Output:", ann.getOutput());
+    }
+
+    displayStats(ann.averageError(), pass);
 }

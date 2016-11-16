@@ -13,7 +13,7 @@ namespace ANN
         void                feedForw(const std::vector<double>& worldInput);
         void                backProp(const std::vector<double>& target);
 
-        std::vector<double> getOutput() const;
+        std::vector<double> getOutput()    const;
         double              averageError() const { return averageError_; }
 
     private:

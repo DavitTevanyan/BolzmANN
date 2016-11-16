@@ -112,9 +112,9 @@ struct Queue : std::queue<T>
     }
 };
 
-///////////////////////////// FREE FUNCTIONS
+///////////////////////////// FREE FUNCTIONS /////////////////////////////
 
-inline std::string peek_next_line(std::stringstream& ss)
+inline std::string peekNextLine(std::stringstream& ss)
 {
     std::string nextLine = "";
     const std::stringstream::pos_type pos = ss.tellg();
@@ -124,7 +124,7 @@ inline std::string peek_next_line(std::stringstream& ss)
     return nextLine;
 }
 
-inline std::string strip_whitespace(std::string s)
+inline std::string stripWhitespace(std::string s)
 {
     s.erase(std::remove_if(s.begin(), s.end(), [](char c) { return std::isspace(c); }), s.end());
 }

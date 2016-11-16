@@ -12,15 +12,13 @@ namespace ANN
 	class Neuron
 	{
 	public:
-		Neuron(int numOutputs, int myIdxL);
-		void   activate(const Layer& prevLayer);
-		void   calcOutputGradients(const double target);
-		void   calcHiddenGradients(const Layer& nextLayer);
-		void   updateInputWeights(Layer& prevLayer);
-
-        void   setOutput(double val) { output_ = val;  }
-        double output() const        { return output_; }
-
+		       Neuron(int numOutputs, int myIdxL);
+		       void   activate(const Layer& prevLayer);
+		       void   calcOutputGradients(const double target);
+		       void   calcHiddenGradients(const Layer& nextLayer);
+		       void   updateInputWeights(Layer& prevLayer);
+               void   setOutput(double val) { output_ = val;  }
+               double output() const        { return output_; }
 	private:
 		static double activationFunction(double x);           // for forward  propagation
 		static double activationFunctionDerivative(double x); // for backward propagation

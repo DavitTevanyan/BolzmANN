@@ -3,6 +3,17 @@
 
 using namespace ANN;
 
+namespace ANN {
+
+std::vector<Data> getTrainSet()
+{
+    TrainingData data("trainingData.txt");
+    std::vector<Data> trainSet;
+    while (!data.isEof())
+        trainSet.push_back({ data.getNextInput(), data.getNextTarget() });
+    return trainSet;
+}
+
 TrainingData::TrainingData(const std::string& fileName)
     : trainingDataFile_(fileName.c_str())
 {
@@ -52,3 +63,5 @@ std::vector<double> TrainingData::getNextTarget()
 
     return targetOutputVals;
 }
+
+} // namespace ANN
