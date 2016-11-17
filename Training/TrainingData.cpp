@@ -64,5 +64,12 @@ std::vector<double> TrainingData::getNextTarget()
     return targetOutputVals;
 }
 
+// Samples for profiling (to avoid slow file access)
+Sample s1 = { { 1.0, 0.0 }, { 0.0 } };
+Sample s2 = { { 1.0, 1.0 }, { 1.0 } };
+Sample s3 = { { 0.0, 1.0 }, { 0.0 } };
+Sample s4 = { { 0.0, 0.0 }, { 0.0 } };
+
+std::vector<Sample> AND = { s1, s2, s3, s4 };
 
 } // namespace ANN
