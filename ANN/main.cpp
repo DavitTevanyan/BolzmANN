@@ -6,10 +6,12 @@ using namespace ANN;
 
 int main()
 {
-    auto trainSet = getTrainSet();
+    std::vector<Sample> trainSet = AND;
+//    std::vector<Sample> trainSet = getTrainSet();
 
     Ann ann({ 2, 2, 3, 1 }); // topology by initializer-list
     
+    // Train
     while (ann.averageError() > 0.05)
     {
         for (const auto& sample : trainSet)
@@ -20,6 +22,7 @@ int main()
         }
     }
 
+    // Test
     for (const auto& sample : trainSet)
     {
         ann.feedForw(sample.input);

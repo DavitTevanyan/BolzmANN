@@ -5,12 +5,12 @@ using namespace ANN;
 
 namespace ANN {
 
-std::vector<Data> getTrainSet()
+std::vector<Sample> getTrainSet()
 {
-    TrainingData data("trainingData.txt");
-    std::vector<Data> trainSet;
-    while (!data.isEof())
-        trainSet.push_back({ data.getNextInput(), data.getNextTarget() });
+    TrainingData samples("and.txt");
+    std::vector<Sample> trainSet;
+    while (!samples.allRead())
+        trainSet.push_back({ samples.getNextInput(), samples.getNextTarget() });
     return trainSet;
 }
 
@@ -63,5 +63,6 @@ std::vector<double> TrainingData::getNextTarget()
 
     return targetOutputVals;
 }
+
 
 } // namespace ANN

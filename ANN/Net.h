@@ -3,8 +3,8 @@
 
 #include "Neuron.h"
 
-namespace ANN
-{
+namespace ANN {
+
     class Ann
     {
     public:
@@ -22,6 +22,7 @@ namespace ANN
         std::vector<Layer> layers_;                       // layers_[layerNum][neuronNum]
         static double      averageSmoothingFactor_;
     };
-}
+
+} // namespace ANN
 
 #endif // NET_H
