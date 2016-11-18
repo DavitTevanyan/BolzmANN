@@ -1,5 +1,10 @@
 #include "SpecificUtilities.h"
 
+void display(const std::string& msg)
+{
+    std::cout << std::endl << msg << std::endl << std::endl;
+}
+
 void display(const std::string& label, const std::vector<double>& v)
 {
     std::cout << label << " ";

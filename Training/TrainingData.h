@@ -20,11 +20,8 @@ namespace ANN {
     {
     public:
         TrainingData(const std::string& filename);
-
-        std::vector<double> getNextInput();
-        std::vector<double> getNextTarget();
-
-        bool allRead() { return dataFile_.eof(); }
+        std::vector<double> getValues();
+        bool                allRead() { return dataFile_.eof(); }
 
     private:
         std::ifstream dataFile_;

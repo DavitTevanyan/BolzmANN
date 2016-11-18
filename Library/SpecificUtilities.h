@@ -9,6 +9,7 @@
 
 const bool alignRight = true;
 
+void display(const std::string& msg);
 void display(const std::string& label, const std::vector<double>& v);
 void displayStats(const double d, const double pass);
 

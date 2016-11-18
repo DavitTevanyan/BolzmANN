@@ -8,60 +8,37 @@ namespace ANN {
 std::vector<Sample> getTrainSet(const std::string& fileName)
 {
     TrainingData samples(fileName);
+
     std::vector<Sample> trainSet;
     while (!samples.allRead())
-        trainSet.push_back({ samples.getNextInput(), samples.getNextTarget() });
+    {
+        auto input  = samples.getValues();
+        auto target = samples.getValues();
+        trainSet.push_back({ input, target });
+    }
     return trainSet;
 }
 
 TrainingData::TrainingData(const std::string& fileName)
     : dataFile_(fileName.c_str())
 {
-    // nothing
+    if (!dataFile_)
+        throw std::runtime_error("ERROR: No training data file.");
 }
 
-std::vector<double> TrainingData::getNextInput()
+std::vector<double> TrainingData::getValues()
 {
     std::vector<double> input;
 
     std::string line;
     getline(dataFile_, line);
-    std::stringstream strmLine(line);
-
-    std::string label;
-    strmLine >> label;
-    if (label == "in:")
-    {
-        double value;
-        while (strmLine >> value) 
-        {
-            input.emplace_back(value);
-        }
-    }
-
-    return input;
-}
-
-std::vector<double> TrainingData::getNextTarget()
-{
-    std::vector<double> target;
-
-    std::string line;
-    getline(dataFile_, line);
     std::stringstream ss(line);
 
-    std::string label;
-    ss >> label;
-    if (label == "out:")
-    {
-        double oneValue;
-        while (ss >> oneValue) 
-        {
-            target.emplace_back(oneValue);
-        }
-    }
+    double x;
+    while (ss >> x) 
+        input.emplace_back(x);
 
-    return target;
+    return input;
 }
 
 ///////////////////////////////////////////////////////

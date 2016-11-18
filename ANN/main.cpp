@@ -4,7 +4,7 @@
 
 using namespace ANN;
 
-int main()
+int main() try
 {
     std::vector<Sample> trainSet = getTrainSet("../Training/and.txt");
 
@@ -32,4 +32,12 @@ int main()
     }
 
     displayStats(ann.averageError(), pass);
+}
+catch (std::exception e)
+{
+    display(e.what());
+}
+catch (...)
+{
+    display("ERROR: Unknown.");
 }
