@@ -5,9 +5,9 @@ using namespace ANN;
 
 namespace ANN {
 
-std::vector<Sample> getTrainSet()
+std::vector<Sample> getTrainSet(const std::string& fileName)
 {
-    TrainingData samples("and.txt");
+    TrainingData samples(fileName);
     std::vector<Sample> trainSet;
     while (!samples.allRead())
         trainSet.push_back({ samples.getNextInput(), samples.getNextTarget() });
@@ -15,7 +15,7 @@ std::vector<Sample> getTrainSet()
 }
 
 TrainingData::TrainingData(const std::string& fileName)
-    : trainingDataFile_(fileName.c_str())
+    : dataFile_(fileName.c_str())
 {
     // nothing
 }
@@ -25,7 +25,7 @@ std::vector<double> TrainingData::getNextInput()
     std::vector<double> input;
 
     std::string line;
-    getline(trainingDataFile_, line);
+    getline(dataFile_, line);
     std::stringstream strmLine(line);
 
     std::string label;
@@ -44,10 +44,10 @@ std::vector<double> TrainingData::getNextInput()
 
 std::vector<double> TrainingData::getNextTarget()
 {
-    std::vector<double> targetOutputVals;
+    std::vector<double> target;
 
     std::string line;
-    getline(trainingDataFile_, line);
+    getline(dataFile_, line);
     std::stringstream ss(line);
 
     std::string label;
@@ -57,19 +57,29 @@ std::vector<double> TrainingData::getNextTarget()
         double oneValue;
         while (ss >> oneValue) 
         {
-            targetOutputVals.emplace_back(oneValue);
+            target.emplace_back(oneValue);
         }
     }
 
-    return targetOutputVals;
+    return target;
 }
 
-// Samples for profiling (to avoid slow file access)
-Sample s1 = { { 1.0, 0.0 }, { 0.0 } };
-Sample s2 = { { 1.0, 1.0 }, { 1.0 } };
-Sample s3 = { { 0.0, 1.0 }, { 0.0 } };
-Sample s4 = { { 0.0, 0.0 }, { 0.0 } };
+///////////////////////////////////////////////////////
+// Samples for profiling (to avoid slow file access) //
+///////////////////////////////////////////////////////
 
-std::vector<Sample> AND = { s1, s2, s3, s4 };
+Sample a1 = { { 1.0, 0.0 }, { 0.0 } };
+Sample a2 = { { 1.0, 1.0 }, { 1.0 } };
+Sample a3 = { { 0.0, 1.0 }, { 0.0 } };
+Sample a4 = { { 0.0, 0.0 }, { 0.0 } };
+
+std::vector<Sample> AND = { a1, a2, a3, a4 };
+
+Sample x1 = { { 1.0, 0.0 }, { 1.0 } };
+Sample x2 = { { 1.0, 1.0 }, { 0.0 } };
+Sample x3 = { { 0.0, 1.0 }, { 1.0 } };
+Sample x4 = { { 0.0, 0.0 }, { 0.0 } };
+
+std::vector<Sample> XOR = { x1, x2, x3, x4 };
 
 } // namespace ANN

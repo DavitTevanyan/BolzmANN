@@ -14,7 +14,7 @@ namespace ANN {
         std::vector<double> target;
     };
 
-    std::vector<Sample> getTrainSet();
+    std::vector<Sample> getTrainSet(const std::string& fileName);
 
     class TrainingData
     {
@@ -24,13 +24,18 @@ namespace ANN {
         std::vector<double> getNextInput();
         std::vector<double> getNextTarget();
 
-        bool allRead() { return trainingDataFile_.eof(); }
+        bool allRead() { return dataFile_.eof(); }
 
     private:
-        std::ifstream trainingDataFile_;
+        std::ifstream dataFile_;
     };
 
+///////////////////////////////////////////////////////
+// Samples for profiling (to avoid slow file access) //
+///////////////////////////////////////////////////////
+
     extern std::vector<Sample> AND;
+    extern std::vector<Sample> XOR;
 
 } // namespace ANN
 
