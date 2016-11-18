@@ -1,6 +1,8 @@
 # BolzmANN
 Neural network in C++ by and for the participants of the [MASIS Programming Class](http://www.masisclass.com).
 
+All network logic is in C++. Some tests are in Python.
+
 # Note to Contributors
 Before committing, make sure that:
 
