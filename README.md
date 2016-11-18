@@ -1,5 +1,5 @@
 # BolzmANN
-Neural network by the participants of the [MASIS Programming Class](http://www.masisclass.com).
+Neural network in C++ by and for the participants of the [MASIS Programming Class](http://www.masisclass.com).
 
 # Note to Contributors
 Before committing, make sure that:
