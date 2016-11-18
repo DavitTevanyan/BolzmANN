@@ -6,6 +6,7 @@ using namespace ANN;
 
 int main()
 {
+    std::vector<Sample> trainSet = getTrainSet("../Training/and.txt");
 
     Ann ann({ 2, 2, 3, 1 }); // topology by initializer-list
     
