@@ -10,5 +10,5 @@ Before committing, make sure that:
 - Build succeeds with **zero warnings** (existing 2 warnings about profiling are ok).
 - Cppcheck ends with **zero warnings** for every project.
 - Run produces **expected results**.
-- All tests **PASS**.
+- All functional tests **PASS**.
   
