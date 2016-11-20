@@ -1,8 +1,8 @@
 #ifndef TRAININGDATA_H
 #define TRAININGDATA_H
 
-#include <vector>
 #include <fstream>
+#include <vector>
 #include <string>
 
 namespace ANN {
