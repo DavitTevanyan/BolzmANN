@@ -4,11 +4,11 @@
 #include <sstream>
 #include <vector>
 #include <cctype>
+#include <stack>
+#include <queue>
 #include <list>
 #include <map>
 #include <set>
-#include <stack>
-#include <queue>
 
 template<typename T>
 struct Vector : std::vector<T>
