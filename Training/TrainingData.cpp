@@ -23,7 +23,7 @@ TrainingData::TrainingData(const std::string& fileName)
     : dataFile_(fileName.c_str())
 {
     if (!dataFile_)
-        throw std::runtime_error("ERROR: Could not open training data file." + fileName);
+        throw std::runtime_error("ERROR: Could not open training data file: " + fileName);
 }
 
 std::vector<double> TrainingData::getValues()
