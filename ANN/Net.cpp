@@ -24,7 +24,7 @@ Ann::Ann(const std::vector<int>& topology)
         }
 
         // Bias is last neuron, fixed output
-        layers_.back().back().setOutput(1.0);
+        layers_.back().back().setOutput(1.0); // completely irrelevant for i == numLayers-1?
     }
 }
 

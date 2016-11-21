@@ -33,7 +33,7 @@ int main() try
 
     displayStats(ann.averageError(), pass);
 }
-catch (std::exception e)
+catch (const std::exception& e)
 {
     display(e.what());
 }
