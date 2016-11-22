@@ -34,6 +34,7 @@ namespace ANN
 
         std::vector<ConnectionOut> axon_;
 
+        /////////////////////// UC ///////////////////////
         std::vector<ConnectionIn> inCons_;
     };
 
