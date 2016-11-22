@@ -33,6 +33,7 @@ Ann::Ann(const std::vector<int>& topology)
         for (auto& n : layers_[i])
         {
             if (i == topology.size() - 1)
+                break; // output neuron connects to none
 
             for (const auto& nn : layers_[i + 1])
                 n.connect(nn);
