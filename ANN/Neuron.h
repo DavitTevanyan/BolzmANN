@@ -1,18 +1,20 @@
 #ifndef NEURON_H
 #define NEURON_H
 
-#include <vector> // test
+#include "General.h"
+#include <vector>
 
 namespace ANN
 {
     class   Neuron;
     struct  Connection;
-    typedef std::vector<Neuron> Layer;
+    typedef Vector<Neuron> Layer;
 
     class Neuron
     {
     public:
                Neuron(int numOutputs, int myIdxL);
+               void   connect(const Neuron& to);
                void   activate(const Layer& prevLayer);
                void   calcOutputGradients(const double target);
                void   calcHiddenGradients(const Layer& nextLayer);
@@ -31,15 +33,19 @@ namespace ANN
                double gradient_;  double gradientDup_;
         const  int    idxL_;
 
-        std::vector<Connection> axon_;
+        Vector<Connection> axon_;
 
         /////////////////////// UC ///////////////////////
-        std::vector<Connection> inCons_;
+        Vector<Connection> inCons_;
+        Vector<Connection> axCons_;
     };
 
     struct Connection
     {
+        /////////////////////// UC ///////////////////////
+        const Neuron* link = nullptr;
         double value;
+
         double weight = rand() / double(RAND_MAX);
         double deltaWeight;
     };

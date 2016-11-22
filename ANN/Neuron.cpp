@@ -16,6 +16,13 @@ Neuron::Neuron(int numOutputs, int myIdxL)
     }
 }
 
+void Neuron::connect(const Neuron& to)
+{
+    Connection c;
+    c.link = &to;
+    axCons_.push_back(c);
+}
+
 void Neuron::activate(const Layer& prevLayer)
 {
     double sum = 0.0;
