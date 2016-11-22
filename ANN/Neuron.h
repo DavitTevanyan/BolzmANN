@@ -5,9 +5,9 @@
 
 namespace ANN
 {
-
     class   Neuron;
-    struct  Connection;
+    struct  ConnectionIn; // TODO: Later to merge into one Connection.
+    struct  ConnectionOut;
     typedef std::vector<Neuron> Layer;
 
     class Neuron
@@ -32,11 +32,20 @@ namespace ANN
                double gradient_;
         const  int    idxL_;
 
-        std::vector<Connection> axon_;
+        std::vector<ConnectionOut> axon_;
+
+        std::vector<ConnectionIn> inCons_;
     };
 
-    struct Connection
+    struct ConnectionOut
     {
+        double weight = rand() / double(RAND_MAX);
+        double deltaWeight;
+    };
+
+    struct ConnectionIn
+    {
+        double value;
         double weight = rand() / double(RAND_MAX);
         double deltaWeight;
     };

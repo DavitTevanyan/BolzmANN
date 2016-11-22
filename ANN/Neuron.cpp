@@ -11,7 +11,8 @@ Neuron::Neuron(int numOutputs, int myIdxL)
 {
     for (int i = 0; i < numOutputs; ++i)
     {
-        axon_.emplace_back(Connection());
+        axon_.emplace_back(ConnectionOut());
+        inCons_.emplace_back(ConnectionIn());
     }
 }
 
@@ -25,6 +26,14 @@ void Neuron::activate(const Layer& prevLayer)
         sum += neuron.output() * neuron.axon_[idxL_].weight; // inelegant
 
     output_ = activationFunction(sum);
+
+    /////////////////////// UC ///////////////////////
+
+//    double sum = 0.0;
+//    for (const auto& in : inCons_)
+//        sum += in.value * in.weight;
+//
+//    output_ = activationFunction(sum);
 }
 
 void Neuron::calcOutputGradients(const double target)
@@ -54,7 +63,7 @@ double Neuron::activationFunctionDerivative(const double x)
 
 void Neuron::updateInputWeights(Layer& prevLayer)
 {
-    // The weights to be updated are in the Connection container
+    // The weights to be updated are in the ConnectionOut container
     // in the neurons in the preceding layer
     for (auto& neuron : prevLayer)
     {
@@ -65,6 +74,17 @@ void Neuron::updateInputWeights(Layer& prevLayer)
         neuron.axon_[idxL_].deltaWeight = newDeltaWeight;
         neuron.axon_[idxL_].weight     += newDeltaWeight;
     }
+
+    /////////////////////// UC ///////////////////////
+//    for (auto& in : inCons_)
+//    {
+//        double oldDeltaWeight = in.deltaWeight;
+//        double newDeltaWeight = rate * gradient_* in.value
+//                              + momentum * oldDeltaWeight; // add a fraction of the old delta weight
+//
+//        in.deltaWeight = newDeltaWeight;
+//        in.weight     += newDeltaWeight;
+//    }
 }
 
 // Sum of the derivatives of the weights of the next layer

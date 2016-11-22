@@ -19,7 +19,7 @@ namespace ANN {
     private:
         double             error_;
         double             averageError_;
-        std::vector<Layer> layers_;                       // layers_[layerNum][neuronNum]
+        std::vector<Layer> layers_;                       // layers_[layer][neuron]
         static double      averageSmoothingFactor_;
     };
 
