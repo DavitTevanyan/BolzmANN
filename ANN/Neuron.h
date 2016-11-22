@@ -6,8 +6,7 @@
 namespace ANN
 {
     class   Neuron;
-    struct  ConnectionIn; // TODO: Later to merge into one Connection.
-    struct  ConnectionOut;
+    struct  Connection;
     typedef std::vector<Neuron> Layer;
 
     class Neuron
@@ -28,29 +27,22 @@ namespace ANN
 
         static double rate;     // [0.0, 1.0] overall net learning rate
         static double momentum; // [0.0,   n] multiplier of last weight change (momentum)
-               double output_;
-               double gradient_;
+               double output_;    double outputDup_;
+               double gradient_;  double gradientDup_;
         const  int    idxL_;
 
-        std::vector<ConnectionOut> axon_;
+        std::vector<Connection> axon_;
 
         /////////////////////// UC ///////////////////////
-        std::vector<ConnectionIn> inCons_;
+        std::vector<Connection> inCons_;
     };
 
-    struct ConnectionOut
-    {
-        double weight = rand() / double(RAND_MAX);
-        double deltaWeight;
-    };
-
-    struct ConnectionIn
+    struct Connection
     {
         double value;
         double weight = rand() / double(RAND_MAX);
         double deltaWeight;
     };
-
 } // namespace ANN
 
 #endif // NEURON_H

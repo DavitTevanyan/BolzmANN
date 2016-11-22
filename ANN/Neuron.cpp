@@ -11,8 +11,8 @@ Neuron::Neuron(int numOutputs, int myIdxL)
 {
     for (int i = 0; i < numOutputs; ++i)
     {
-        axon_.emplace_back(ConnectionOut());
-        inCons_.emplace_back(ConnectionIn());
+        axon_.emplace_back(Connection());
+        inCons_.emplace_back(Connection());
     }
 }
 
@@ -63,7 +63,7 @@ double Neuron::activationFunctionDerivative(const double x)
 
 void Neuron::updateInputWeights(Layer& prevLayer)
 {
-    // The weights to be updated are in the ConnectionOut container
+    // The weights to be updated are in the Connection container
     // in the neurons in the preceding layer
     for (auto& neuron : prevLayer)
     {
