@@ -7,7 +7,6 @@ using namespace ANN;
 double Ann::averageSmoothingFactor_ = 100.0; // Number of training samples to average over
 
 Ann::Ann(const std::vector<int>& topology)
-    : error_(0.0), averageError_(5.0)
 {
     const size_t numLayers = topology.size();
 
