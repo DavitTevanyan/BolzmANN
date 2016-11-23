@@ -30,6 +30,7 @@ namespace ANN
 
     // TODO: Move to another module.
     public:
+        std::string reportState(Layer& nextLayer);
 
         static double rate;     // [0.0, 1.0] overall net learning rate
         static double momentum; // [0.0,   n] multiplier of last weight change (momentum)
