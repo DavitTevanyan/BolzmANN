@@ -14,43 +14,33 @@ namespace ANN
     {
     public:
                Neuron(int numOutputs, int myIdxL);
-               void   connect(const Neuron& to);
                void   activate(const Layer& prevLayer);
                void   calcOutputGradients(const double target);
                void   calcHiddenGradients(const Layer& nextLayer);
                void   updateInputWeights(Layer& prevLayer);
                void   setOutput(double val) { output_ = val;  }
                double output() const        { return output_; }
+               
+    public: // TODO: Move to another module.
+        std::string reportState(Layer& nextLayer);
 
     private:
-        static double activationFunction(double x);           // for forward  propagation
-        static double activationFunctionDerivative(double x); // for backward propagation
+        static double af(double x);           // for forward  propagation
+        static double af_Derivative(double x); // for backward propagation
 
                double sumDOW(const Layer& nextLayer) const;
 
-    // TODO: Move to another module.
-    public:
-        std::string reportState(Layer& nextLayer);
-
         static double rate;     // [0.0, 1.0] overall net learning rate
         static double momentum; // [0.0,   n] multiplier of last weight change (momentum)
-               double output_;    double outputDup_;
-               double gradient_;  double gradientDup_;
+               double output_;
+               double gradient_;
         const  int    idxL_;
 
         Vector<Connection> axon_;
-
-        /////////////////////// UC ///////////////////////
-        Vector<Connection> inCons_;
-        Vector<Connection> axCons_;
     };
 
     struct Connection
     {
-        /////////////////////// UC ///////////////////////
-        const Neuron* link = nullptr;
-        double value;
-
         double weight = rand() / double(RAND_MAX);
         double deltaWeight;
     };

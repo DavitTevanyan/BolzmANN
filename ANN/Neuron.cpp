@@ -12,15 +12,7 @@ Neuron::Neuron(int numOutputs, int myIdxL)
     for (int i = 0; i < numOutputs; ++i)
     {
         axon_.emplace_back(Connection());
-        inCons_.emplace_back(Connection());
     }
-}
-
-void Neuron::connect(const Neuron& to)
-{
-    Connection c;
-    c.link = &to;
-    axCons_.push_back(c);
 }
 
 void Neuron::activate(const Layer& prevLayer)
@@ -32,21 +24,13 @@ void Neuron::activate(const Layer& prevLayer)
     for (const auto& neuron : prevLayer)
         sum += neuron.output() * neuron.axon_[idxL_].weight; // inelegant
 
-    output_ = activationFunction(sum);
-
-    /////////////////////// UC ///////////////////////
-
-//    double sum = 0.0;
-//    for (const auto& in : inCons_)
-//        sum += in.value * in.weight;
-//
-//    output_ = activationFunction(sum);
+    output_ = af(sum);;
 }
 
 void Neuron::calcOutputGradients(const double target)
 {
     const double delta = target - output_;
-    gradient_  = delta * activationFunctionDerivative(output_);
+    gradient_  = delta * af_Derivative(output_);
 }
 
 void Neuron::calcHiddenGradients(const Layer& nextLayer)
@@ -55,15 +39,15 @@ void Neuron::calcHiddenGradients(const Layer& nextLayer)
     // for a hidden neuron, we take something equivalent: DOW:
     // sum of the derivatives of the weights of the next layer 
     const double dow = sumDOW(nextLayer);
-    gradient_  = dow * activationFunctionDerivative(output_);
+    gradient_  = dow * af_Derivative(output_);
 }
 
-double Neuron::activationFunction(double x)
+double Neuron::af(double x)
 {
     return tanh(x); // gives an output range of [-1.0, 1.0]
 }
 
-double Neuron::activationFunctionDerivative(const double x)
+double Neuron::af_Derivative(const double x)
 {
     return 1.0 - x * x; // tanh derivative (quick approximation)
 }
@@ -81,17 +65,6 @@ void Neuron::updateInputWeights(Layer& prevLayer)
         neuron.axon_[idxL_].deltaWeight = newDeltaWeight;
         neuron.axon_[idxL_].weight     += newDeltaWeight;
     }
-
-    /////////////////////// UC ///////////////////////
-//    for (auto& in : inCons_)
-//    {
-//        double oldDeltaWeight = in.deltaWeight;
-//        double newDeltaWeight = rate * gradient_* in.value
-//                              + momentum * oldDeltaWeight; // add a fraction of the old delta weight
-//
-//        in.deltaWeight = newDeltaWeight;
-//        in.weight     += newDeltaWeight;
-//    }
 }
 
 // Sum of the derivatives of the weights of the next layer
@@ -111,13 +84,15 @@ double Neuron::sumDOW(const Layer& nextLayer) const
 std::string Neuron::reportState(Layer& nextLayer)
 {
     std::string neuron = "--------------\n";
-    neuron += "O    " + std::to_string(output_)   + "\n"
-            + "G    " + std::to_string(gradient_) + "\n";
 
     for (size_t n = 0; n < nextLayer.size() - 1; ++n)
     {
         neuron += "W_" + std::to_string(n + 1) + "  " + std::to_string(axon_[n].weight) + "\n"
                 + "D_" + std::to_string(n + 1) + "  " + std::to_string(axon_[n].weight) + "\n";
     }
+
+    neuron += "G    " + std::to_string(gradient_) + "\n"
+            + "O    " + std::to_string(output_)   + "\n";
+
     return neuron += "--------------\n";
 }

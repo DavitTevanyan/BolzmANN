@@ -27,19 +27,6 @@ Ann::Ann(const std::vector<int>& topology)
         // Bias is last neuron, fixed output
         layers_.back().back().setOutput(1.0); // completely irrelevant for i == numLayers-1?
     }
-
-    ////////////////////////// UC /////////////////////////
-    for (int i = 0; i < numLayers; ++i)
-    {
-        for (auto& n : layers_[i])
-        {
-            if (i == topology.size() - 1)
-                break; // output neuron connects to none
-
-            for (const auto& nn : layers_[i + 1])
-                n.connect(nn);
-        }
-    }
 }
 
 void Ann::feedForw(const std::vector<double>& worldInput)
