@@ -1,6 +1,7 @@
 #include "Net.h"
 #include <iostream>
 #include <cassert>
+#include <fstream>
 
 using namespace ANN;
 
@@ -122,4 +123,22 @@ std::vector<double> Ann::getOutput() const
     result.pop_back(); // remove bias neuron
 
     return result;
+}
+
+void Ann::reportState(const std::string& fileName)
+{
+    std::stringstream ss;
+    for (size_t i = 0; i < layers_.size() - 1; ++i)
+    {
+        Layer& currentLayer = layers_[i];
+        Layer& nextLayer    = layers_[i + 1];
+        for (auto& neuron : currentLayer)
+        {
+            ss << neuron.reportState(nextLayer);
+        }
+        ss << "===================================="
+           << std::endl;
+    }
+
+    std::ofstream(fileName) << ss.rdbuf();
 }
