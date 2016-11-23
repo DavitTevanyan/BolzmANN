@@ -1,6 +1,6 @@
 #ifndef  NET_H
 #define  NET_H
-
+#include <fstream>
 #include "Neuron.h"
 
 namespace ANN {
@@ -15,8 +15,9 @@ namespace ANN {
 
         std::vector<double> getOutput()    const;
         double              averageError() const { return averageError_; }
-
+        void                dumpNN();
     private:
+        std::ofstream      report_;
         double             error_;
         double             averageError_;
         std::vector<Layer> layers_;                       // layers_[layer][neuron]

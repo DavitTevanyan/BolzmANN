@@ -7,7 +7,7 @@ using namespace ANN;
 double Ann::averageSmoothingFactor_ = 100.0; // Number of training samples to average over
 
 Ann::Ann(const std::vector<int>& topology)
-    : error_(0.0), averageError_(0.2)
+    : error_(0.0), averageError_(0.2), report_("report.txt")
 {
     const size_t numLayers = topology.size();
 
@@ -109,4 +109,26 @@ std::vector<double> Ann::getOutput() const
     result.pop_back(); // remove bias neuron
 
     return result;
+}
+
+void Ann::dumpNN()
+{
+    if (!report_.is_open())
+    {
+        std::cout << "Cannot open file\n";
+        return;
+    }
+    std::string seperator = "###############\n\n";
+    std::stringstream        ss;
+    for (size_t i = 0; i < layers_.size() - 1; ++i)
+    {
+        Layer& currentLayer = layers_[i];
+        Layer& nextLayer = layers_[i + 1];
+        for (auto& neuron : currentLayer)
+        {
+            ss << neuron.dumpNeuron(nextLayer);
+        }
+        ss << seperator;
+    }
+    report_ << ss.rdbuf();
 }
