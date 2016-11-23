@@ -22,7 +22,7 @@ void Neuron::activate(const Layer& prevLayer)
     // Sum the previous layer's outputs (which are our inputs),
     // including the bias node of the previous layer
     for (const auto& neuron : prevLayer)
-        sum += neuron.output() * neuron.axon_[idxL_].weight; // inelegant
+        sum += neuron.output() * neuron.axon_[idxL_].weight;
 
     output_ = af(sum);;
 }
