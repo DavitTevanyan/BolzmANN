@@ -9,15 +9,13 @@ namespace ANN {
     {
     public:
         enum { INPUT };
-        explicit Ann(const std::vector<int>& topology);      
-        void                feedForw(const std::vector<double>& worldInput);
-        void                backProp(const std::vector<double>& target);
+        explicit  Ann(const std::vector<int>& topology);      
+        void feedForw(const std::vector<double>& worldInput);
+        void backProp(const std::vector<double>& target);
 
         std::vector<double> getOutput()    const;
         double              averageError() const { return averageError_; }
-    
-    public: // TODO: Move to another module.
-        void reportState(const std::string& fileName);
+        void                reportState(const std::string& fileName);
 
     private:
         double             error_;

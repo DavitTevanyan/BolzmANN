@@ -2,7 +2,6 @@
 #define NEURON_H
 
 #include "General.h"
-#include <vector>
 
 namespace ANN
 {
@@ -20,12 +19,11 @@ namespace ANN
                void   updateInputWeights(Layer& prevLayer);
                void   setOutput(double val) { output_ = val;  }
                double output() const        { return output_; }
-               
-    public: // TODO: Move to another module.
+
         std::string reportState(Layer& nextLayer);
 
     private:
-        static double af(double x);           // for forward  propagation
+        static double af(double x);            // for forward  propagation
         static double af_Derivative(double x); // for backward propagation
 
                double sumDOW(const Layer& nextLayer) const;
