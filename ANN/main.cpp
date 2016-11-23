@@ -20,7 +20,7 @@ int main() try
             ann.backProp(sample.target);
         }
     }
-    ann.dumpNN();
+
     // Test
     for (const auto& sample : trainSet)
     {
