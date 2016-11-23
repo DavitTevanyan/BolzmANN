@@ -112,22 +112,5 @@ struct Queue : std::queue<T>
     }
 };
 
-///////////////////////////// FREE FUNCTIONS /////////////////////////////
-
-inline std::string peekNextLine(std::stringstream& ss)
-{
-    std::string nextLine = "";
-    const std::stringstream::pos_type pos = ss.tellg();
-    if (ss.peek() != EOF)
-        std::getline(ss, nextLine);
-    ss.seekg(pos);
-    return nextLine;
-}
-
-inline std::string stripWhitespace(std::string s)
-{
-    s.erase(std::remove_if(s.begin(), s.end(), [](char c) { return std::isspace(c); }), s.end());
-}
-
 #endif // LIBRARY_H
 
