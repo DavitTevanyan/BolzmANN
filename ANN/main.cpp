@@ -32,6 +32,7 @@ int main() try
     }
 
     displayStats(ann.averageError(), pass);
+    ann.reportState("report.txt");
 }
 catch (const std::exception& e)
 {

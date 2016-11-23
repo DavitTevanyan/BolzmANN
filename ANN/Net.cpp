@@ -1,6 +1,7 @@
 #include "Net.h"
 #include <iostream>
 #include <cassert>
+#include <fstream>
 
 using namespace ANN;
 
@@ -25,6 +26,19 @@ Ann::Ann(const std::vector<int>& topology)
 
         // Bias is last neuron, fixed output
         layers_.back().back().setOutput(1.0); // completely irrelevant for i == numLayers-1?
+    }
+
+    ////////////////////////// UC /////////////////////////
+    for (int i = 0; i < numLayers; ++i)
+    {
+        for (auto& n : layers_[i])
+        {
+            if (i == topology.size() - 1)
+                break; // output neuron connects to none
+
+            for (const auto& nn : layers_[i + 1])
+                n.connect(nn);
+        }
     }
 }
 
@@ -109,4 +123,22 @@ std::vector<double> Ann::getOutput() const
     result.pop_back(); // remove bias neuron
 
     return result;
+}
+
+void Ann::reportState(const std::string& fileName)
+{
+    std::stringstream ss;
+    for (size_t i = 0; i < layers_.size() - 1; ++i)
+    {
+        Layer& currentLayer = layers_[i];
+        Layer& nextLayer    = layers_[i + 1];
+        for (auto& neuron : currentLayer)
+        {
+            ss << neuron.reportState(nextLayer);
+        }
+        ss << "===================================="
+           << std::endl;
+    }
+
+    std::ofstream(fileName) << ss.rdbuf();
 }

@@ -15,6 +15,9 @@ namespace ANN {
 
         std::vector<double> getOutput()    const;
         double              averageError() const { return averageError_; }
+    
+    public: // TODO: Move to another module.
+        void reportState(const std::string& fileName);
 
     private:
         double             error_;

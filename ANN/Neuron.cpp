@@ -11,9 +11,16 @@ Neuron::Neuron(int numOutputs, int myIdxL)
 {
     for (int i = 0; i < numOutputs; ++i)
     {
-        axon_.emplace_back(ConnectionOut());
-        inCons_.emplace_back(ConnectionIn());
+        axon_.emplace_back(Connection());
+        inCons_.emplace_back(Connection());
     }
+}
+
+void Neuron::connect(const Neuron& to)
+{
+    Connection c;
+    c.link = &to;
+    axCons_.push_back(c);
 }
 
 void Neuron::activate(const Layer& prevLayer)
@@ -63,7 +70,7 @@ double Neuron::activationFunctionDerivative(const double x)
 
 void Neuron::updateInputWeights(Layer& prevLayer)
 {
-    // The weights to be updated are in the ConnectionOut container
+    // The weights to be updated are in the Connection container
     // in the neurons in the preceding layer
     for (auto& neuron : prevLayer)
     {
@@ -99,4 +106,18 @@ double Neuron::sumDOW(const Layer& nextLayer) const
     }
 
     return sum;
+}
+
+std::string Neuron::reportState(Layer& nextLayer)
+{
+    std::string neuron = "--------------\n";
+    neuron += "O    " + std::to_string(output_)   + "\n"
+            + "G    " + std::to_string(gradient_) + "\n";
+
+    for (size_t n = 0; n < nextLayer.size() - 1; ++n)
+    {
+        neuron += "W_" + std::to_string(n + 1) + "  " + std::to_string(axon_[n].weight) + "\n"
+                + "D_" + std::to_string(n + 1) + "  " + std::to_string(axon_[n].weight) + "\n";
+    }
+    return neuron += "--------------\n";
 }

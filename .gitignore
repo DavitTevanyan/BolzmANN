@@ -63,3 +63,4 @@ Temporary Items
 *.nupkg
 packages\*
 *.db
+ANN/report.txt
