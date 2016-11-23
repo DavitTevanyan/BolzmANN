@@ -13,11 +13,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Training", "Training\Traini
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Library", "Library\Library.vcxproj", "{4C298AB0-42EF-45A5-BC2B-322DC8CFC15A}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D456847F-E335-43E6-BB02-D855A96FA06D}"
-	ProjectSection(SolutionItems) = preProject
-		Performance3.psess = Performance3.psess
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(Performance) = preSolution
 		HasPerformanceSessions = true

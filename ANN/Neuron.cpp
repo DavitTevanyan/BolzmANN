@@ -1,6 +1,5 @@
 #include "Neuron.h"
 #include <iostream>
-#include <sstream>
 
 using namespace ANN;
 
@@ -100,18 +99,4 @@ double Neuron::sumDOW(const Layer& nextLayer) const
     }
 
     return sum;
-}
-
-std::string Neuron::dumpNeuron(Layer& nextLayer)
-{
-    std::string neuron = "O    " + std::to_string(output_)   + "\n"
-                       + "G    " + std::to_string(gradient_) + "\n";
-
-    for (size_t n = 0; n < nextLayer.size() - 1; ++n)
-    {
-        neuron += "W_" + std::to_string(n + 1) + "  " + std::to_string(axon_[n].weight) + "\n"
-                + "D_" + std::to_string(n + 1) + "  " + std::to_string(axon_[n].weight) + "\n";
-    }
-    neuron += "--------------\n";
-    return neuron;
 }
