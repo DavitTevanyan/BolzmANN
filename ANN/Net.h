@@ -9,7 +9,7 @@ namespace ANN {
     {
     public:
         enum { INPUT };
-        explicit  Ann(const std::vector<int>& topology);      
+        explicit  Ann(const std::vector<int>& layers);      
         void feedForw(const std::vector<double>& worldInput);
         void backProp(const std::vector<double>& target);
 

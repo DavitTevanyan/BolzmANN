@@ -7,25 +7,27 @@ using namespace ANN;
 
 double Ann::averageSmoothingFactor_ = 100.0; // Number of training samples to average over
 
-Ann::Ann(const std::vector<int>& topology)
+Ann::Ann(const std::vector<int>& layers)
     : error_(0.0), averageError_(0.2)
 {
-    const size_t numLayers = topology.size();
+    const size_t numLayers = layers.size();
 
-    for (int i = 0; i < numLayers; ++i)
+    for (int L = 0; L < numLayers; ++L)
     {
         layers_.emplace_back(Layer());
-        const int outs = (i == topology.size() - 1) ? 0 : topology[i + 1]; // fully connected net
+
+        int outs = 0;
+        if (L < numLayers - 1)
+            outs = layers[L + 1];
 
         // Fill layer with neurons; last neuron is bias
-        const int sizeL = topology[i];
-        for (int posL = 0; posL <= sizeL; ++posL)
+        for (int posL = 0; posL <= layers[L]; ++posL)
         {
-            layers_.back().emplace_back(Neuron(posL, outs));
+            layers_[L].emplace_back(Neuron(posL, outs));
         }
 
         // Bias is last neuron, fixed output
-        layers_.back().back().setOutput(1.0); // completely irrelevant for i == numLayers-1?
+        layers_[L].back().setOutput(1.0); // completely irrelevant for L == numLayers-1
     }
 }
 
@@ -41,12 +43,12 @@ void Ann::feedForw(const std::vector<double>& worldInput)
 
     // Forward propagate: activate every neuron
     // in every layer except input layer neurons
-    for (int i = 1; i < layers_.size(); ++i)
+    for (int L = 1; L < layers_.size(); ++L)
     {
-        Layer& prevLayer  = layers_[i - 1];
-        for (int n = 0; n < layers_[i].size() - 1; ++n)
+        Layer& prevLayer  = layers_[L - 1];
+        for (int n = 0; n < layers_[L].size() - 1; ++n)
         {
-            layers_[i][n].activate(prevLayer);
+            layers_[L][n].activate(prevLayer);
         }
     }
 }
@@ -78,10 +80,10 @@ void Ann::backProp(const std::vector<double>& target)
     // Calculate hidden layer gradients
     for (size_t i = layers_.size() - 2; i > 0; --i) 
     {
-        Layer& hiddenLayer = layers_[i];
-        Layer& nextLayer   = layers_[i + 1];
+        Layer& hiddLayer = layers_[i];
+        Layer& nextLayer = layers_[i + 1];
 
-        for (auto& neuron : hiddenLayer) 
+        for (auto& neuron : hiddLayer) 
         {
             neuron.calcHiddenGradients(nextLayer);
         }
