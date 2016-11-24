@@ -12,7 +12,7 @@ namespace ANN
     class Neuron
     {
     public:
-               Neuron(int numOutputs, int myIdxL);
+               Neuron(int numOutputs, int posL);
                void   activate(const Layer& prevLayer);
                void   calcOutputGradients(const double target);
                void   calcHiddenGradients(const Layer& nextLayer);
@@ -32,7 +32,7 @@ namespace ANN
         static double momentum; // [0.0,   n] multiplier of last weight change (momentum)
                double output_;
                double gradient_;
-        const  int    idxL_;
+        const  int    posL_;
 
         Vector<Connection> axon_;
     };

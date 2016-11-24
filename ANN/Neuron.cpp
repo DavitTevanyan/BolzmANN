@@ -6,8 +6,8 @@ using namespace ANN;
 double Neuron::rate     = 0.6;  // overall net learning rate,                range [0.0, 1.0]
 double Neuron::momentum = 0.4;  // momentum, multiplier of last deltaWeight, range [0.0, 1.0]
 
-Neuron::Neuron(int numOutputs, int myIdxL)
-    : output_(0.0), gradient_(0.0), idxL_(myIdxL)
+Neuron::Neuron(int numOutputs, int posL)
+    : output_(0.0), gradient_(0.0), posL_(posL)
 {
     for (int i = 0; i < numOutputs; ++i)
     {
@@ -22,7 +22,7 @@ void Neuron::activate(const Layer& prevLayer)
     // Sum the previous layer's outputs (which are our inputs),
     // including the bias node of the previous layer
     for (const auto& neuron : prevLayer)
-        sum += neuron.output() * neuron.axon_[idxL_].weight;
+        sum += neuron.output() * neuron.axon_[posL_].weight;
 
     output_ = af(sum);;
 }
@@ -58,12 +58,12 @@ void Neuron::updateInputWeights(Layer& prevLayer)
     // in the neurons in the preceding layer
     for (auto& neuron : prevLayer)
     {
-        double oldDeltaWeight = neuron.axon_[idxL_].deltaWeight;
+        double oldDeltaWeight = neuron.axon_[posL_].deltaWeight;
         double newDeltaWeight = rate * gradient_ * neuron.output()
                               + momentum * oldDeltaWeight; // add a fraction of the old delta weight
 
-        neuron.axon_[idxL_].deltaWeight = newDeltaWeight;
-        neuron.axon_[idxL_].weight     += newDeltaWeight;
+        neuron.axon_[posL_].deltaWeight = newDeltaWeight;
+        neuron.axon_[posL_].weight     += newDeltaWeight;
     }
 }
 
