@@ -21,6 +21,7 @@ Ann::Ann(const std::vector<int>& topology)
         const int sizeL = topology[i];
         for (int posL = 0; posL <= sizeL; ++posL)
         {
+            layers_.back().emplace_back(Neuron(posL, outs));
         }
 
         // Bias is last neuron, fixed output
