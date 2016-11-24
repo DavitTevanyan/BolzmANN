@@ -12,7 +12,7 @@ namespace ANN
     class Neuron
     {
     public:
-               Neuron(int numOutputs, int posL);
+               Neuron(int posL, int outs);
                void   activate(const Layer& prevLayer);
                void   calcOutputGradients(const double target);
                void   calcHiddenGradients(const Layer& nextLayer);

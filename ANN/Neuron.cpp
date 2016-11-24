@@ -6,10 +6,9 @@ using namespace ANN;
 double Neuron::rate     = 0.6;  // overall net learning rate,                range [0.0, 1.0]
 double Neuron::momentum = 0.4;  // momentum, multiplier of last deltaWeight, range [0.0, 1.0]
 
-Neuron::Neuron(int numOutputs, int posL)
     : output_(0.0), gradient_(0.0), posL_(posL)
 {
-    for (int i = 0; i < numOutputs; ++i)
+    for (int i = 0; i < outs; ++i)
     {
         axon_.emplace_back(Connection());
     }

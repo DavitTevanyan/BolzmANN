@@ -15,13 +15,12 @@ Ann::Ann(const std::vector<int>& topology)
     for (int i = 0; i < numLayers; ++i)
     {
         layers_.emplace_back(Layer());
-        const int numOutputs = (i == topology.size() - 1) ? 0 : topology[i + 1]; // fully connected net
+        const int outs = (i == topology.size() - 1) ? 0 : topology[i + 1]; // fully connected net
 
         // Fill layer with neurons; last neuron is bias
         const int sizeL = topology[i];
         for (int posL = 0; posL <= sizeL; ++posL)
         {
-            layers_.back().emplace_back(Neuron(numOutputs, posL));
         }
 
         // Bias is last neuron, fixed output
