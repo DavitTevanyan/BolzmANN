@@ -56,7 +56,7 @@ void Ann::feedForw(const std::vector<double>& worldInput)
 void Ann::backProp(const std::vector<double>& target)
 {
     // Calculate overall net error (RMS of output neuron errors)
-    auto& outputLayer = layers_.back();
+    ANN::Layer& outputLayer = layers_.back();
     error_ = 0.0; // reset for each backpropagation
 
     for (int n = 0; n < outputLayer.size() - 1; ++n) 
@@ -93,8 +93,7 @@ void Ann::backProp(const std::vector<double>& target)
     // for all layers from output to first hidden layer
     for (size_t i = layers_.size() - 1; i > 0; --i) 
     {
-        Layer& prevLayer = layers_[i - 1];
-
+        Layer&  prevLayer = layers_[i - 1];
         for (int n = 0; n < layers_[i].size() - 1; ++n) 
         {
             layers_[i][n].updateInputWeights(prevLayer);
@@ -119,9 +118,9 @@ void Ann::reportState(const std::string& fileName)
     std::stringstream ss;
     for (size_t i = 0; i < layers_.size() - 1; ++i)
     {
-        Layer& currentLayer = layers_[i];
-        Layer& nextLayer    = layers_[i + 1];
-        for (auto& neuron : currentLayer)
+        Layer& currLayer = layers_[i];
+        Layer& nextLayer = layers_[i + 1];
+        for (auto& neuron : currLayer)
         {
             ss << neuron.reportState(nextLayer);
         }
