@@ -93,5 +93,6 @@ std::string Neuron::reportState(Layer& nextLayer)
     neuron +=  "G    " + std::to_string(gradient_) + "\n"
             +  "O    " + std::to_string(output_)   + "\n";
 
-    return neuron += "--------------\n";
+    neuron += "--------------\n";
+    return neuron;
 }

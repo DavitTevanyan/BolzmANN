@@ -19,7 +19,7 @@ namespace ANN {
     class TrainingData
     {
     public:
-        TrainingData(const std::string& filename);
+        explicit TrainingData(const std::string& filename);
         std::vector<double> getValues();
         bool allRead() { return dataFile_.eof(); }
 
