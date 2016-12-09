@@ -90,8 +90,9 @@ std::string Neuron::reportState(Layer& nextLayer)
         neuron += "W_" + std::to_string(n + 1) + "  " + std::to_string(axon_[n].weight) + "\n"
                 + "D_" + std::to_string(n + 1) + "  " + std::to_string(axon_[n].weight) + "\n";
     }
-    neuron +=  "G    " + std::to_string(gradient_) + "\n"
-            +  "O    " + std::to_string(output_)   + "\n";
+    neuron += "G    " + std::to_string(gradient_) + "\n"
+            + "O    " + std::to_string(output_) + "\n";
 
-    return neuron += "--------------\n";
+    neuron += "--------------\n";
+    return neuron;
 }
