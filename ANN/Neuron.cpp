@@ -3,38 +3,28 @@
 
 using namespace ANN;
 
-double Neuron::rate     = 0.5;  // overall net learning rate,                range [0.0, 1.0]
-double Neuron::momentum = 0.5;  // momentum, multiplier of last deltaWeight, range [0.0, 1.0]
+double Neuron::rate     = 0.6;  // overall net learning rate,                range [0.0, 1.0]
+double Neuron::momentum = 0.4;  // momentum, multiplier of last deltaWeight, range [0.0, 1.0]
 
-Neuron::Neuron(const std::vector<int>& in, const std::vector<int>& out, bool isBias)
-    : output_(0.0),
-    gradient_(0.0), 
-    in_(in),
-    out_(out),
-    isBias_(isBias)
+Neuron::Neuron(int posL, int outs)
+    : output_(0.0), gradient_(0.0), posL_(posL)
 {
-    for (int i = 0; i < out_.size(); ++i)
+    for (int i = 0; i < outs; ++i)
     {
         axon_.emplace_back(Connection());
     }
 }
 
-void Neuron::activate(const std::vector<Neuron>& net, int n)
+void Neuron::activate(const Layer& prevLayer)
 {
-    if (in_.empty()) return;
-
     double sum = 0.0;
 
     // Sum the previous layer's outputs (which are our inputs),
     // including the bias node of the previous layer
-    int index = 0;
-    for (const auto& i : in_)
-    {
-        index = std::find(net[i].out_.begin(), net[i].out_.end(), n) - net[i].out_.begin();
-        sum += net[i].output() * net[i].axon_[index].weight;
-    }
+    for (const auto& neuron : prevLayer)
+        sum += neuron.output() * neuron.axon_[posL_].weight;
 
-    output_ = af(sum);
+    output_ = af(sum);;
 }
 
 void Neuron::calcOutputGradients(const double target)
@@ -43,21 +33,13 @@ void Neuron::calcOutputGradients(const double target)
     gradient_  = delta * af_Derivative(output_);
 }
 
-void Neuron::calcHiddenGradients(const std::vector<Neuron>& net)
+void Neuron::calcHiddenGradients(const Layer& nextLayer)
 {
-    if (isBias_) return;
-
     // Since we don't have a target value to compare with
     // for a hidden neuron, we take something equivalent: DOW:
     // sum of the derivatives of the weights of the next layer 
-    double sum = 0.0;
-
-    // Sum our contributions to the errors of the nodes we feed
-    for (int n = 0; n < out_.size(); ++n)
-    {
-        sum += axon_[n].weight * net[out_[n]].gradient_;
-    }
-    gradient_  = sum * af_Derivative(output_);
+    const double dow = sumDOW(nextLayer);
+    gradient_  = dow * af_Derivative(output_);
 }
 
 double Neuron::af(double x)
@@ -70,26 +52,40 @@ double Neuron::af_Derivative(const double x)
     return 1.0 - x * x; // tanh derivative (quick approximation)
 }
 
-void Neuron::updateInputWeights(const std::vector<Neuron>& net)
+void Neuron::updateInputWeights(Layer& prevLayer)
 {
     // The weights to be updated are in the Connection container
     // in the neurons in the preceding layer
-    for (int n = 0; n < out_.size(); ++n)
+    for (auto& neuron : prevLayer)
     {
-        double oldDeltaWeight = axon_[n].deltaWeight;
-        double newDeltaWeight = rate * net[out_[n]].gradient_ * output_
+        double oldDeltaWeight = neuron.axon_[posL_].deltaWeight;
+        double newDeltaWeight = rate * gradient_ * neuron.output()
                               + momentum * oldDeltaWeight;
 
-        axon_[n].deltaWeight = newDeltaWeight;
-        axon_[n].weight     += newDeltaWeight;
+        neuron.axon_[posL_].deltaWeight = newDeltaWeight;
+        neuron.axon_[posL_].weight     += newDeltaWeight;
     }
 }
 
-std::string Neuron::reportState()
+// Sum of the derivatives of the weights of the next layer
+double Neuron::sumDOW(const Layer& nextLayer) const
+{
+    double sum = 0.0;
+
+    // Sum our contributions to the errors of the nodes we feed
+    for (int n = 0; n < nextLayer.size() - 1; ++n)
+    {
+        sum += axon_[n].weight * nextLayer[n].gradient_;
+    }
+
+    return sum;
+}
+
+std::string Neuron::reportState(Layer& nextLayer)
 {
     std::string neuron = "--------------\n";
 
-    for (size_t n = 0; n < out_.size(); ++n)
+    for (size_t n = 0; n < nextLayer.size() - 1; ++n)
     {
         neuron += "W_" + std::to_string(n + 1) + "  " + std::to_string(axon_[n].weight) + "\n"
                 + "D_" + std::to_string(n + 1) + "  " + std::to_string(axon_[n].weight) + "\n";

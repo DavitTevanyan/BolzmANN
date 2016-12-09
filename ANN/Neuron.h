@@ -12,29 +12,29 @@ namespace ANN
     class Neuron
     {
     public:
-               explicit Neuron(const std::vector<int>& in, const std::vector<int>& out, bool isBias);
-               void   activate(const std::vector<Neuron>& net, int n);
+               Neuron(int posL, int outs);
+               void   activate(const Layer& prevLayer);
                void   calcOutputGradients(const double target);
-               void   calcHiddenGradients(const std::vector<Neuron>& net);
-               void   updateInputWeights(const std::vector<Neuron>& net);
+               void   calcHiddenGradients(const Layer& nextLayer);
+               void   updateInputWeights(Layer& prevLayer);
                void   setOutput(double val) { output_ = val;  }
                double output() const        { return output_; }
 
-        std::string reportState();
+        std::string reportState(Layer& nextLayer);
 
     private:
         static double af(double x);            // for forward  propagation
         static double af_Derivative(double x); // for backward propagation
 
-    private:
-        static double           rate;     // [0.0, 1.0] overall net learning rate
-        static double           momentum; // [0.0,   n] multiplier of last weight change (momentum)
-               double           output_;
-               double           gradient_; 
-               std::vector<int> in_;
-               std::vector<int> out_;
-               bool             isBias_;
-        Vector<Connection>      axon_;
+               double sumDOW(const Layer& nextLayer) const;
+
+        static double rate;     // [0.0, 1.0] overall net learning rate
+        static double momentum; // [0.0,   n] multiplier of last weight change (momentum)
+               double output_;
+               double gradient_;
+        const  int    posL_;
+
+        Vector<Connection> axon_;
     };
 
     struct Connection
