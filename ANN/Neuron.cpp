@@ -97,6 +97,5 @@ std::string Neuron::reportState()
     neuron +=  "G    " + std::to_string(gradient_) + "\n"
             +  "O    " + std::to_string(output_)   + "\n";
 
-    neuron += "--------------\n";
-    return neuron;
+    return neuron += "--------------\n";
 }
