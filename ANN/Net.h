@@ -9,7 +9,7 @@ namespace ANN {
     {
     public:
         enum { INPUT };
-        explicit  Ann(const std::vector<int>& layers);      
+        explicit  Ann(const std::vector<int>& topology);
         void feedForw(const std::vector<double>& worldInput);
         void backProp(const std::vector<double>& target);
 
@@ -18,10 +18,11 @@ namespace ANN {
         void                reportState(const std::string& fileName);
 
     private:
-        double             error_;
-        double             averageError_;
-        std::vector<Layer> layers_;                       // layers_[layer][neuron]
-        static double      averageSmoothingFactor_;
+        double              error_;
+        double              averageError_;
+        std::vector<Neuron> net_;
+        std::vector<int>    topology_;
+        static double       averageSmoothingFactor_;
     };
 
 } // namespace ANN
