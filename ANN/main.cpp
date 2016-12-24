@@ -9,7 +9,13 @@ int main() try
     std::vector<Sample> trainSet = getTrainSet("../Training/and.txt");
 
     Ann ann({ 2, 2, 3, 1 }); // topology by initializer-list
+
+    ann.addNeuron(2, 2, false);
+    ann.deleteNeuron(2, 2);
     
+    //ann.deleteConnection(2, 2, 4, 1);
+    //ann.addConnection(1, 2, 3, 1);
+
     // Train
     while (ann.averageError() > 0.05)
     {

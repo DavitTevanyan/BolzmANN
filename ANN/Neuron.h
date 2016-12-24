@@ -19,7 +19,14 @@ namespace ANN
         void   updateInputWeights(const std::vector<Neuron>& net);
         void   setOutput(double val) { output_ = val;  }
         double output() const        { return output_; }
-
+        void   addIns();
+        void   addOuts(int pos);
+        void   updateIns(bool operation);
+        void   updateOuts(bool operation);
+        void   removeIns(std::vector<Neuron>& net, int index);
+        void   removeOuts(std::vector<Neuron>& net, int index);
+        void   addConnection(int index, bool direction);
+        void   deleteConnection(int index, bool direction);
         std::string reportState();
 
     private:

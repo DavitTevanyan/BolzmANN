@@ -22,18 +22,20 @@ Ann::Ann(const std::vector<int>& topology)
     std::vector<int> in;
     std::vector<int> out;
 
+    // Initialize vector net_ with neurons like following structure
+    // (neuron, inNeuronsList, outNeuronsList)
     for (int L = 0; L < topology_.size(); ++L)
     {
         isBias = false;
         index += topology_[L] + 1;
         for (; n < neuronsCount - 1; ++n)
         {
-            if (L == 0 || L != topology_.size() - 1)
+            if (L != topology_.size() - 1)
             {
                 for (int i = 0; i < topology_[L + 1]; ++i)
                     out.emplace_back(index + i);
             }
-            if ((L == topology_.size() - 1 || L != 0) && (n != index - 1))
+            if (L != 0 && n != index - 1)
             {
                 for (int i = 0; i < topology_[L - 1] + 1; ++i)
                     in.emplace_back(index - topology_[L] - topology_[L - 1] - 2 + i);
@@ -70,17 +72,19 @@ void Ann::feedForw(const std::vector<double>& worldInput)
 
 void Ann::backProp(const std::vector<double>& target)
 {
+    assert(target.size() == topology_[topology_.size() - 1]);
+
     // Calculate overall net error (RMS of output neuron errors)
     int neuronsCount = 0;
     for (size_t i = 0; i < topology_.size(); ++i)
         neuronsCount += topology_[i] + 1;
 
     error_ = 0.0; // reset for each backpropagation
-    int n = neuronsCount - topology_[topology_.size() - 1] - 1;
-    int m = 0;
-    for (; n < net_.size(); ++n)
+    int nout = neuronsCount - topology_[topology_.size() - 1] - 1;
+    int ntar = 0;
+    for (; nout < net_.size(); ++nout)
     {
-        double delta = target[m++] - net_[n].output();
+        double delta = target[ntar++] - net_[nout].output();
         error_ += delta * delta;
     }
 
@@ -91,20 +95,151 @@ void Ann::backProp(const std::vector<double>& target)
     averageError_ = (averageError_ * averageSmoothingFactor_ + error_)
                                   / (averageSmoothingFactor_ + 1.0);
 
-    // Calculate hidden layer gradients
-    n = neuronsCount - topology_[topology_.size() - 1] - 1;
-    m = 0;
-    for (; n < net_.size(); ++n)
-        net_[n].calcOutputGradients(target[m++]);
+    // Calculate output layer gradients
+    nout = neuronsCount - topology_[topology_.size() - 1] - 1;
+    ntar = 0;
+    for (; nout < net_.size(); ++nout)
+        net_[nout].calcOutputGradients(target[ntar++]);
 
-    // Calculate hidden layer gradients   
-    for (int n = net_.size() - topology_[topology_.size() - 1] - 1; n > topology_[0]; --n)
+    // Calculate hidden layers gradients   
+    for (size_t n = net_.size() - topology_[topology_.size() - 1] - 1; n > topology_[0]; --n)
         net_[n].calcHiddenGradients(net_);
 
     // Update connection weights
     // for all layers from output to first hidden layer
-    for (int n = 0; n < net_.size() - topology_[topology_.size() - 1]; ++n)
+    for (size_t n = 0; n < net_.size() - topology_[topology_.size() - 1]; ++n)
         net_[n].updateInputWeights(net_);
+}
+
+void Ann::addNeuron(int layer, int neuron, bool isBias)
+{
+    int size = (layer == topology_.size()) ? topology_[layer - 1] : topology_[layer - 1] + 1;
+    assert(0 < layer && layer <= topology_.size()
+        && 0 < neuron   && neuron   <= size);
+
+    // Get input and output neurons for adding neuron
+    std::vector<int> in;
+    std::vector<int> out;
+    int L     = 0;
+    int index = 0;
+    for (; L < layer; ++L)
+        index += topology_[L] + 1;
+    --L;
+
+    if (layer != 1 && !isBias)
+    {
+        for (int i = 0; i < topology_[L - 1] + 1; ++i)
+        {
+            in.emplace_back(index - topology_[L] - topology_[L - 1] - 2 + i);
+            net_[index - topology_[L] - topology_[L - 1] - 2 + i].addOuts(neuron - 1);
+        }
+    }
+
+    if (L != topology_.size() - 1)
+    {
+        for (int i = 0; i < topology_[L + 1]; ++i)
+        {
+            out.emplace_back(index + 1 + i);
+            net_[index + i].addIns();
+        }
+    }
+
+    // Update outputs of neurons which follow adding neuron
+    int count = index - topology_[L] - 1;
+    for (int i = 0; i < net_.size() - count; ++i)
+        net_[count + i].updateOuts(true);
+
+    // Update inputs of neurons since two or more layers after from layer of adding neuron
+    if (layer < topology_.size() - 1)
+    {
+        count = index + topology_[L + 1] + 1;
+        for (int i = 0; i < net_.size() - count; ++i)
+            net_[count + i].updateIns(true);
+    }
+
+    // Figure out neuronition where neuron will be added
+    index = 0;
+    for (int i = 0; i < layer - 1; ++i)
+        index += topology_[i] + 1;
+    index += isBias ? topology_[layer - 1] : neuron - 1;
+
+    auto it = net_.begin();
+    for (int i = 0; i < index; ++i)
+        ++it;
+
+    net_.insert(it, Neuron(in, out, isBias));
+    ++topology_[layer - 1];
+}
+
+void Ann::deleteNeuron(int layer, int neuron)
+{
+    assert(0 < layer && layer <= topology_.size());
+
+    int neuronsCount = (layer == topology_.size()) ? topology_[layer - 1] : topology_[layer - 1] + 1;
+
+    assert(0 < neuron && neuron <= neuronsCount);
+   
+    int index = 0;
+    for (int i = 0; i < layer - 1; ++i)
+        index += topology_[i] + 1;
+    index += neuron - 1;
+
+    net_[index].removeOuts(net_, index);
+    net_[index].removeIns(net_, index);
+
+    // Figure out position of neuron which will be erased
+    index = 0;
+    for (int i = 0; i < layer - 1; ++i)
+        index += topology_[i] + 1;
+    index += neuron - 1;
+
+    auto it = net_.begin();
+    for (int i = 0; i < index; ++i)
+        ++it;
+
+    net_.erase(it);
+    --topology_[layer - 1];
+}
+
+void Ann::findIndexes(int srcLayer, int srcNeuron, int dstLayer, int dstNeuron, int& srcIndex, int& dstIndex)
+{
+    assert(0 < srcLayer && srcLayer <= topology_.size()
+        && 0 < dstLayer && dstLayer <= topology_.size());
+
+    int srcNeuronsCount = (srcLayer == topology_.size()) ? topology_[srcLayer - 1] : topology_[srcLayer - 1] + 1;
+    int dstNeuronsCount = (dstLayer == topology_.size()) ? topology_[dstLayer - 1] : topology_[dstLayer - 1] + 1;
+
+    assert( 0 < srcNeuron && srcNeuron <= srcNeuronsCount
+         && 0 < dstNeuron && dstNeuron <= dstNeuronsCount);
+
+    for (int i = 0; i < srcLayer - 1; ++i)
+        srcIndex += topology_[i] + 1;
+
+    for (int i = 0; i < dstLayer - 1; ++i)
+        dstIndex += topology_[i] + 1;
+
+    srcIndex += srcNeuron - 1;
+    dstIndex += dstNeuron - 1;
+}
+
+void Ann::addConnection(int srcLayer, int srcNeuron, int dstLayer, int dstNeuron)
+{
+    int srcIndex = 0;
+    int dstIndex = 0;
+    findIndexes(srcLayer, srcNeuron, dstLayer, dstNeuron, srcIndex, dstIndex);
+
+    net_[srcIndex].addConnection(dstIndex, false);
+    net_[dstIndex].addConnection(srcIndex, true);
+}
+
+void Ann::deleteConnection(int srcLayer, int srcNeuron, int dstLayer, int dstNeuron)
+{
+    int srcIndex = 0;
+    int dstIndex = 0;
+    findIndexes(srcLayer, srcNeuron, dstLayer, dstNeuron, srcIndex, dstIndex);
+
+    net_[srcIndex].deleteConnection(dstIndex, false);
+    net_[dstIndex].deleteConnection(srcIndex, true);
 }
 
 std::vector<double> Ann::getOutput() const

@@ -28,7 +28,7 @@ void Neuron::activate(const std::vector<Neuron>& net, int n)
 
     // Sum the previous layer's outputs (which are our inputs),
     // including the bias node of the previous layer
-    int index = 0;
+    std::ptrdiff_t index = 0;
     for (const auto& i : in_)
     {
         index = std::find(net[i].out_.begin(), net[i].out_.end(), n) - net[i].out_.begin();
@@ -82,6 +82,131 @@ void Neuron::updateInputWeights(const std::vector<Neuron>& net)
 
         axon_[n].deltaWeight = newDeltaWeight;
         axon_[n].weight     += newDeltaWeight;
+    }
+}
+
+void Neuron::addIns()
+{
+    in_.emplace_back(in_.back() + 1);
+}
+
+void Neuron::addOuts(int pos)
+{
+    out_.emplace_back(out_.back() + 1);
+    axon_.insert(axon_.begin() + pos, Connection());
+}
+
+void Neuron::removeOuts(std::vector<Neuron>& net, int index)
+{
+    for (auto& n : net)
+    {
+        auto it = std::find(n.out_.begin(), n.out_.end(), index);
+        if (it != n.out_.end())
+        {
+            std::ptrdiff_t pos = it - n.out_.begin();
+            auto itWeight = n.axon_.begin();
+            for (int i = 0; i < pos; ++i)
+                ++itWeight;
+            int m = 0;
+            for (; it != n.out_.end();)
+            {
+                if (*it == index)
+                {
+                    it = n.out_.erase(it);  
+                    ++m;
+                }
+                else
+                   ++it;
+            }
+            for (int i = 0; i < m; ++i)
+                itWeight = n.axon_.erase(itWeight);
+        }
+        for (auto& i : n.out_)
+            if (i > index)
+                --i;
+    }
+}
+
+void Neuron::removeIns(std::vector<Neuron>& net, int index)
+{
+    for (auto& n : net)
+    {
+        auto it = std::find(n.in_.begin(), n.in_.end(), index);
+        for (; it != n.in_.end();)
+            (*it == index) ? it = n.in_.erase(it) : ++it;
+
+        for (auto& i : n.in_)
+            if (i > index)
+                --i;
+    }
+}
+
+void Neuron::updateIns(bool operation)
+{
+    if (operation)
+    {
+        for (int i = 0; i < in_.size(); ++i)
+            ++in_[i];
+    }
+    else
+    {
+
+    }
+}
+
+void Neuron::updateOuts(bool operation)
+{
+    if (operation)
+    {
+        for (int i = 0; i < out_.size(); ++i)
+            ++out_[i];
+    }
+    else
+    {
+
+    }
+}
+
+void Neuron::addConnection(int index, bool direction)
+{
+    if (direction)
+        in_.insert(std::upper_bound(in_.cbegin(), in_.cend(), index), index);
+    else
+    {
+        auto itIndex = std::upper_bound(out_.cbegin(), out_.cend(), index);
+        std::ptrdiff_t pos = itIndex - out_.begin();
+        out_.insert(itIndex, index);
+
+        auto itWeight = axon_.begin();
+        for (int i = 0; i < pos; ++i)
+            ++itWeight;
+        axon_.insert(itWeight, Connection());
+    }
+}
+
+void Neuron::deleteConnection(int index, bool direction)
+{
+    if (direction)
+    {
+        auto it = std::find(in_.begin(), in_.end(), index);
+        if (it == in_.end())
+            throw std::out_of_range("Cannot remove connection, because it doesn't exist.");
+            
+        in_.erase(it);
+    }
+    else
+    {
+        auto it = std::find(out_.begin(), out_.end(), index);
+        if (it == out_.end())
+            throw std::out_of_range("Cannot remove connection, because it doesn't exist.");
+
+        std::ptrdiff_t pos = it - out_.begin();
+        out_.erase(it);
+
+        auto itWeight = axon_.begin();
+        for (int i = 0; i < pos; ++i)
+            ++itWeight;
+        axon_.erase(itWeight);
     }
 }
 
