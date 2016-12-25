@@ -12,17 +12,16 @@ namespace ANN
     class Neuron
     {
     public:
-        explicit Neuron(const std::vector<int>& in, const std::vector<int>& out, bool isBias);
+        explicit Neuron(const std::vector<int>& ins, const std::vector<int>& outs, bool isBias);
         void   activate(const std::vector<Neuron>& net, int n);
         void   calcOutputGradients(const double target);
         void   calcHiddenGradients(const std::vector<Neuron>& net);
         void   updateInputWeights(const std::vector<Neuron>& net);
         void   setOutput(double val) { output_ = val;  }
         double output() const        { return output_; }
-        void   addIns();
-        void   addOuts(int pos);
-        void   updateIns(bool operation);
-        void   updateOuts(bool operation);
+        void   addIn();
+        void   addOut(int pos);
+        void   updateInsOuts(int index, bool operation);
         void   removeIns(std::vector<Neuron>& net, int index);
         void   removeOuts(std::vector<Neuron>& net, int index);
         void   addConnection(int index, bool direction);
@@ -38,8 +37,8 @@ namespace ANN
         static double           momentum; // [0.0,   n] multiplier of last weight change (momentum)
                double           output_;
                double           gradient_;
-               std::vector<int> in_;
-               std::vector<int> out_;
+               std::vector<int> ins_;
+               std::vector<int> outs_;
                bool             isBias_;
         Vector<Connection>      axon_;
     };

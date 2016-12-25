@@ -113,61 +113,55 @@ void Ann::backProp(const std::vector<double>& target)
 
 void Ann::addNeuron(int layer, int neuron, bool isBias)
 {
-    int size = (layer == topology_.size()) ? topology_[layer - 1] : topology_[layer - 1] + 1;
-    assert(0 < layer && layer <= topology_.size()
-        && 0 < neuron   && neuron   <= size);
+    assert(0 < layer && layer <= topology_.size());
 
-    // Get input and output neurons for adding neuron
-    std::vector<int> in;
-    std::vector<int> out;
-    int L     = 0;
+    int neuronsCount = (layer == topology_.size()) ? topology_[layer - 1] : topology_[layer - 1] + 1;
+
+    assert(0 < neuron && neuron <= neuronsCount);
+
+    // Get input and output indexes of neurons for adding neuron
+    std::vector<int> ins;
+    std::vector<int> outs;
+
     int index = 0;
-    for (; L < layer; ++L)
-        index += topology_[L] + 1;
-    --L;
+    for (int i = 0; i < layer - 1; ++i)
+        index += topology_[i] + 1;
+
+    index += isBias ? topology_[layer - 1] : neuron - 1;
+
+    for (auto& n : net_)
+    {
+        n.updateInsOuts(index, true);
+    }
+
+    index -= isBias ? topology_[layer - 1] : neuron - 1;
 
     if (layer != 1 && !isBias)
     {
-        for (int i = 0; i < topology_[L - 1] + 1; ++i)
+        for (int i = 0; i < topology_[layer - 2] + 1; ++i)
         {
-            in.emplace_back(index - topology_[L] - topology_[L - 1] - 2 + i);
-            net_[index - topology_[L] - topology_[L - 1] - 2 + i].addOuts(neuron - 1);
+            int nIndex = index - topology_[layer - 2] - 1 + i;
+            ins.emplace_back(nIndex);
+            net_[nIndex].addOut(neuron - 1);
         }
     }
 
-    if (L != topology_.size() - 1)
+    if (layer != topology_.size())
     {
-        for (int i = 0; i < topology_[L + 1]; ++i)
+        for (int i = 0; i < topology_[layer]; ++i)
         {
-            out.emplace_back(index + 1 + i);
-            net_[index + i].addIns();
+            int nIndex = index + topology_[layer - 1] + 1 + i;
+            outs.emplace_back(nIndex);
+            net_[nIndex].addIn();
         }
     }
 
-    // Update outputs of neurons which follow adding neuron
-    int count = index - topology_[L] - 1;
-    for (int i = 0; i < net_.size() - count; ++i)
-        net_[count + i].updateOuts(true);
-
-    // Update inputs of neurons since two or more layers after from layer of adding neuron
-    if (layer < topology_.size() - 1)
-    {
-        count = index + topology_[L + 1] + 1;
-        for (int i = 0; i < net_.size() - count; ++i)
-            net_[count + i].updateIns(true);
-    }
-
-    // Figure out neuronition where neuron will be added
-    index = 0;
-    for (int i = 0; i < layer - 1; ++i)
-        index += topology_[i] + 1;
-    index += isBias ? topology_[layer - 1] : neuron - 1;
-
+    // Figure out position where neuron will be added
     auto it = net_.begin();
     for (int i = 0; i < index; ++i)
         ++it;
 
-    net_.insert(it, Neuron(in, out, isBias));
+    net_.insert(it, Neuron(ins, outs, isBias));
     ++topology_[layer - 1];
 }
 
@@ -188,17 +182,17 @@ void Ann::deleteNeuron(int layer, int neuron)
     net_[index].removeIns(net_, index);
 
     // Figure out position of neuron which will be erased
-    index = 0;
-    for (int i = 0; i < layer - 1; ++i)
-        index += topology_[i] + 1;
-    index += neuron - 1;
-
     auto it = net_.begin();
     for (int i = 0; i < index; ++i)
         ++it;
 
     net_.erase(it);
     --topology_[layer - 1];
+
+    for (auto& n : net_)
+    {
+        n.updateInsOuts(index, false);
+    }
 }
 
 void Ann::findIndexes(int srcLayer, int srcNeuron, int dstLayer, int dstNeuron, int& srcIndex, int& dstIndex)

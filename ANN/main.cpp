@@ -11,7 +11,9 @@ int main() try
     Ann ann({ 2, 2, 3, 1 }); // topology by initializer-list
 
     ann.addNeuron(2, 2, false);
-    ann.deleteNeuron(2, 2);
+    //ann.deleteNeuron(2, 1);
+    //ann.deleteNeuron(2, 1);
+    //ann.deleteNeuron(2, 1);
     
     //ann.deleteConnection(2, 2, 4, 1);
     //ann.addConnection(1, 2, 3, 1);
