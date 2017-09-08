@@ -1,5 +1,5 @@
 # BolzmANN
-Neural network in C++ by and for the participants of the [MASIS Programming Class](http://www.masisclass.com).
+Simple Back Propagation Neural Network in C++ by and for the participants of the [MASIS Programming Class](http://www.masisclass.com).
 
 All network logic is in C++. Some tests are in Python.
 
