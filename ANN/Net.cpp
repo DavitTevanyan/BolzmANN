@@ -17,9 +17,8 @@ Ann::Ann(const std::vector<int>& topology)
 
 void Ann::initializeNet()
 {
-    int neurons = 0;
     for (size_t i = 0; i < topology_.size(); ++i)
-        neurons += topology_[i] + 1;
+        neurons_ += topology_[i] + 1;
 
     bool isBias;
     int  index = 0;
@@ -33,7 +32,7 @@ void Ann::initializeNet()
     {
         isBias = false;
         index += topology_[L] + 1;
-        for (; n < neurons - 1; ++n)
+        for (; n < neurons_ - 1; ++n)
         {
             if (L != topology_.size() - 1)
             {
@@ -105,12 +104,8 @@ void Ann::backProp(const std::vector<double>& target)
     assert(target.size() == topology_[topology_.size() - 1]);
 
     // Calculate overall net error (RMS of output neuron errors)
-    int neuronsCount = 0;
-    for (size_t i = 0; i < topology_.size(); ++i)
-        neuronsCount += topology_[i] + 1;
-
     error_ = 0.0; // reset for each backpropagation
-    int nout = neuronsCount - topology_[topology_.size() - 1] - 1;
+    int nout = neurons_ - topology_[topology_.size() - 1] - 1;
     int ntar = 0;
     for (; nout < net_.size(); ++nout)
     {
@@ -126,7 +121,7 @@ void Ann::backProp(const std::vector<double>& target)
                                   / (averageSmoothingFactor_ + 1.0);
 
     // Calculate output layer gradients
-    nout = neuronsCount - topology_[topology_.size() - 1] - 1;
+    nout = neurons_ - topology_[topology_.size() - 1] - 1;
     ntar = 0;
     for (; nout < net_.size(); ++nout)
         net_[nout].calcOutputGradients(target[ntar++]);

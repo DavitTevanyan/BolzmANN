@@ -33,6 +33,7 @@ namespace ANN {
         double              averageError_;
         std::vector<Neuron> net_;
         std::vector<int>    topology_;
+        int                 neurons_;
         static double       averageSmoothingFactor_;
     };
 
