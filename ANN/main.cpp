@@ -12,19 +12,19 @@ int main() try
     //ann.deleteNeuron({2, 1});
     //ann.deleteNeuron({2, 1});
     //ann.deleteNeuron({2, 1});
-    
+    //
     //ann.deleteConnection({2, 2}, {4, 1});
     //ann.addConnection({1, 2}, {3, 1});
 
     // Train
-    const double avrgError = 0.005;
+    const double avrgError = 0.05;
     ann.trainNet(trainSet, avrgError);
 
     // Test
     ann.testNet(trainSet);
 
-    displayStats(ann.averageError(), pass);
-    ann.reportState("NetState");
+    displayStats(ann.averageError(), ann.getEpochs());
+    ann.reportState("NetState.txt");
 }
 catch (const std::exception& e)
 {

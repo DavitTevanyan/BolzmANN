@@ -6,6 +6,7 @@
 using namespace ANN;
 
 double Ann::averageSmoothingFactor_ = 100.0; // Number of training samples to average over
+double Ann::epoch_ = 1;
 
 Ann::Ann(const std::vector<int>& topology)
     : error_(0.0),
@@ -68,7 +69,7 @@ void Ann::trainNet(const std::vector<Sample>& trainSet, const double avrgError)
     {
         for (const auto& sample : trainSet)
         {
-            pass++;
+            epoch_++;
             feedForw(sample.input);
             backProp(sample.target);
         }

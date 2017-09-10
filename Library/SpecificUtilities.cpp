@@ -15,11 +15,11 @@ void display(const std::string& label, const std::vector<double>& v)
     std::cout << std::endl;
 }
 
-void displayStats(const double error, const double pass)
+void displayStats(const double error, const double epoch)
 {
     // Report how well the training is working, average over recent samples
     std::cout << "-----------------------------------" << std::endl;
-    std::cout << "          Pass: " << pass            << std::endl;
+    std::cout << "          Pass: " << epoch            << std::endl;
     std::cout << " Average error: " << error           << std::endl;
     std::cout << "-----------------------------------" << std::endl;
 }

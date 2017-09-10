@@ -21,8 +21,9 @@ namespace ANN {
 
         std::vector<double> getOutput() const;
         double              averageError() const { return averageError_; }
+        double              getEpochs()    const { return epoch_; }
         void                reportState(const std::string& fileName);
-
+        
     private:
         void findIndexes(const NC& srcNC, const NC& dstNC, int& srcIndex, int& dstIndex);
         void initializeNet();
@@ -35,6 +36,7 @@ namespace ANN {
         std::vector<Neuron> net_;
         std::vector<int>    topology_;
         int                 neurons_;
+        static double       epoch_;
         static double       averageSmoothingFactor_;
     };
 

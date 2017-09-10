@@ -6,8 +6,6 @@
 
 namespace ANN
 {
-    static double pass = 1;
-
     struct Sample
     {
         std::vector<double> input;
