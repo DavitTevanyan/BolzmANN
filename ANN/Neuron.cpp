@@ -116,10 +116,10 @@ void Neuron::removeOuts(std::vector<Neuron>& net, int index)
         {
             std::ptrdiff_t pos = it - n.outs_.begin();
             auto itWeight = n.axon_.begin();
-            for (int i = 0; i < pos; ++i)
-                ++itWeight;
+            std::advance(itWeight, pos);
+
             int m = 0;
-            for (; it != n.outs_.end();)
+            while (it != n.outs_.end())
             {
                 if (*it == index)
                 {
@@ -140,7 +140,7 @@ void Neuron::removeIns(std::vector<Neuron>& net, int index)
     for (auto& n : net)
     {
         auto it = std::find(n.ins_.begin(), n.ins_.end(), index);
-        for (; it != n.ins_.end();)
+        while (it != n.ins_.end())
             (*it == index) ? it = n.ins_.erase(it) : ++it;
     }
 }
@@ -148,16 +148,17 @@ void Neuron::removeIns(std::vector<Neuron>& net, int index)
 void Neuron::addConnection(int index, bool direction)
 {
     if (direction)
+    {
         ins_.insert(std::upper_bound(ins_.cbegin(), ins_.cend(), index), index);
+    }
     else
     {
         auto itIndex = std::upper_bound(outs_.cbegin(), outs_.cend(), index);
-        std::ptrdiff_t pos = itIndex - outs_.begin();
         outs_.insert(itIndex, index);
-
+        std::ptrdiff_t pos = itIndex - outs_.cbegin();
+        
         auto itWeight = axon_.begin();
-        for (int i = 0; i < pos; ++i)
-            ++itWeight;
+        std::advance(itWeight, pos);
         axon_.insert(itWeight, Connection());
     }
 }
@@ -182,8 +183,7 @@ void Neuron::deleteConnection(int index, bool direction)
         outs_.erase(it);
 
         auto itWeight = axon_.begin();
-        for (int i = 0; i < pos; ++i)
-            ++itWeight;
+        std::advance(itWeight, pos);
         axon_.erase(itWeight);
     }
 }

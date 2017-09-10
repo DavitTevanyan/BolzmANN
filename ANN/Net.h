@@ -13,17 +13,18 @@ namespace ANN {
         explicit  Ann(const std::vector<int>& topology);
         void trainNet(const std::vector<Sample>& trainSet, const double avrgError);
         void testNet( const std::vector<Sample>& trainSet);
-        void addNeuron(int layer, int neuron, bool isBias);
-        void deleteNeuron(int layer, int neuron);
-        void addConnection(int srcLayer, int srcNeuron, int dstLayer, int dstNeuron);
-        void deleteConnection(int srcLayer, int srcNeuron, int dstLayer, int dstNeuron);
+
+        void addNeuron(       const NC& nc, bool isBias);
+        void deleteNeuron(    const NC& nc);
+        void addConnection(   const NC& srcNC, const NC& dstNC);
+        void deleteConnection(const NC& srcNC, const NC& dstNC);
 
         std::vector<double> getOutput() const;
         double              averageError() const { return averageError_; }
         void                reportState(const std::string& fileName);
 
     private:
-        void findIndexes(int srcLayer, int srcNeuron, int dstLayer, int dstNeuron, int& srcIndex, int& dstIndex);
+        void findIndexes(const NC& srcNC, const NC& dstNC, int& srcIndex, int& dstIndex);
         void initializeNet();
         void feedForw(const std::vector<double>& worldInput);
         void backProp(const std::vector<double>& target);

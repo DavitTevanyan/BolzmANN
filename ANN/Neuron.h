@@ -48,4 +48,10 @@ namespace ANN
         double weight = rand() / double(RAND_MAX);
         double deltaWeight;
     };
+
+    struct NC
+    {
+        int layer;
+        int neuron;
+    };
 } // namespace ANN
