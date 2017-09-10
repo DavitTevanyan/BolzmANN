@@ -1,5 +1,7 @@
 #pragma once
 
+#include "SpecificUtilities.h"
+#include "TrainingData.h"
 #include "Neuron.h"
 
 namespace ANN {
@@ -9,8 +11,8 @@ namespace ANN {
     public:
         enum { INPUT };
         explicit  Ann(const std::vector<int>& topology);
-        void feedForw(const std::vector<double>& worldInput);
-        void backProp(const std::vector<double>& target);
+        void trainNet(const std::vector<Sample>& trainSet, const double avrgError);
+        void testNet( const std::vector<Sample>& trainSet);
         void addNeuron(int layer, int neuron, bool isBias);
         void deleteNeuron(int layer, int neuron);
         void addConnection(int srcLayer, int srcNeuron, int dstLayer, int dstNeuron);
@@ -23,6 +25,9 @@ namespace ANN {
     private:
         void findIndexes(int srcLayer, int srcNeuron, int dstLayer, int dstNeuron, int& srcIndex, int& dstIndex);
         void initializeNet();
+        void feedForw(const std::vector<double>& worldInput);
+        void backProp(const std::vector<double>& target);
+
     private:
         double              error_;
         double              averageError_;

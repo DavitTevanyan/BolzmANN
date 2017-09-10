@@ -61,6 +61,31 @@ void Ann::initializeNet()
     }
 }
 
+void Ann::trainNet(const std::vector<Sample>& trainSet, const double avrgError)
+{
+    while (averageError() > avrgError)
+    {
+        for (const auto& sample : trainSet)
+        {
+            pass++;
+            feedForw(sample.input);
+            backProp(sample.target);
+        }
+    }
+}
+
+void Ann::testNet(const std::vector<Sample>& trainSet)
+{
+    for (const auto& sample : trainSet)
+    {
+        feedForw(sample.input);
+
+        display("Input: ", sample.input);
+        display("Target:", sample.target);
+        display("Output:", getOutput());
+    }
+}
+
 void Ann::feedForw(const std::vector<double>& worldInput)
 {
     assert(worldInput.size() == topology_[INPUT]);
