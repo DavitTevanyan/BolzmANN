@@ -1,5 +1,4 @@
-#ifndef LIBRARY_H
-#define LIBRARY_H
+#pragma once
 
 #include <sstream>
 #include <vector>
@@ -111,6 +110,3 @@ struct Queue : std::queue<T>
         return std::find_if(My::begin(), My::end(), p) != My::end();
     }
 };
-
-#endif // LIBRARY_H
-

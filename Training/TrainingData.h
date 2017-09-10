@@ -1,15 +1,15 @@
-#ifndef TRAININGDATA_H
-#define TRAININGDATA_H
+#pragma once 
 
 #include <fstream>
 #include <vector>
 #include <string>
 
-namespace ANN {
-
+namespace ANN
+{
     static double pass = 1;
 
-    struct Sample {
+    struct Sample
+    {
         std::vector<double> input;
         std::vector<double> target;
     };
@@ -35,6 +35,3 @@ namespace ANN {
     extern std::vector<Sample> XOR;
 
 } // namespace ANN
-
-#endif // TRAININGDATA_H
-

@@ -1,5 +1,4 @@
-#ifndef  NET_H
-#define  NET_H
+#pragma once
 
 #include "Neuron.h"
 
@@ -33,5 +32,3 @@ namespace ANN {
     };
 
 } // namespace ANN
-
-#endif // NET_H

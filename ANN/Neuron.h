@@ -1,13 +1,12 @@
-#ifndef NEURON_H
-#define NEURON_H
+#pragma once
 
 #include "General.h"
 
 namespace ANN
 {
-    class   Neuron;
-    struct  Connection;
-    typedef Vector<Neuron> Layer;
+    class  Neuron;
+    struct Connection;
+    using  Layer = Vector<Neuron>;
 
     class Neuron
     {
@@ -49,5 +48,3 @@ namespace ANN
         double deltaWeight;
     };
 } // namespace ANN
-
-#endif // NEURON_H

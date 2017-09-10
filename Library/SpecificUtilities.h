@@ -1,5 +1,4 @@
-#ifndef SPECIFIC_UTILITIES_H
-#define SPECIFIC_UTILITIES_H
+#pragma once
 
 #include <iostream>
 #include <cassert>
@@ -10,5 +9,3 @@
 void display(const std::string& msg);
 void display(const std::string& label, const std::vector<double>& v);
 void displayStats(const double d, const double pass);
-
-#endif // SPECIFIC_UTILITIES_H
