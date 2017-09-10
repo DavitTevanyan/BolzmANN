@@ -32,14 +32,15 @@ namespace ANN
         static double af_Derivative(double x); // for backward propagation
 
     private:
-        static double           rate;     // [0.0, 1.0] overall net learning rate
-        static double           momentum; // [0.0,   n] multiplier of last weight change (momentum)
-               double           output_;
-               double           gradient_;
-               std::vector<int> ins_;
-               std::vector<int> outs_;
-               bool             isBias_;
-        Vector<Connection>      axon_;
+        static double      rate;     // [0.0, 1.0] overall net learning rate
+        static double      momentum; // [0.0,   n] multiplier of last weight change (momentum)
+               double      output_;
+               double      gradient_;
+               bool        isBias_;
+        Vector<Connection> axon_;
+
+        std::vector<int>   ins_;
+        std::vector<int>   outs_;
     };
 
     struct Connection

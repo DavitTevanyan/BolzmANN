@@ -12,9 +12,14 @@ Ann::Ann(const std::vector<int>& topology)
     averageError_(0.2),
     topology_(topology)
 {
-    int neuronsCount = 0;
+    initializeNet();
+}
+
+void Ann::initializeNet()
+{
+    int neurons = 0;
     for (size_t i = 0; i < topology_.size(); ++i)
-        neuronsCount += topology_[i] + 1;
+        neurons += topology_[i] + 1;
 
     bool isBias;
     int  index = 0;
@@ -28,7 +33,7 @@ Ann::Ann(const std::vector<int>& topology)
     {
         isBias = false;
         index += topology_[L] + 1;
-        for (; n < neuronsCount - 1; ++n)
+        for (; n < neurons - 1; ++n)
         {
             if (L != topology_.size() - 1)
             {

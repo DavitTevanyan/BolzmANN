@@ -22,7 +22,7 @@ namespace ANN {
 
     private:
         void findIndexes(int srcLayer, int srcNeuron, int dstLayer, int dstNeuron, int& srcIndex, int& dstIndex);
-
+        void initializeNet();
     private:
         double              error_;
         double              averageError_;
