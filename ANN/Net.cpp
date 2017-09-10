@@ -10,7 +10,8 @@ double Ann::averageSmoothingFactor_ = 100.0; // Number of training samples to av
 Ann::Ann(const std::vector<int>& topology)
     : error_(0.0),
     averageError_(0.2),
-    topology_(topology)
+    topology_(topology),
+    neurons_(0)
 {
     initializeNet();
 }
@@ -127,7 +128,7 @@ void Ann::backProp(const std::vector<double>& target)
         net_[nout].calcOutputGradients(target[ntar++]);
 
     // Calculate hidden layers gradients   
-    for (size_t n = net_.size() - topology_[topology_.size() - 1] - 1; n > topology_[0]; --n)
+    for (size_t n = net_.size() - topology_[topology_.size() - 1] - 1; n >= 0; --n)
         net_[n].calcHiddenGradients(net_);
 
     // Update connection weights

@@ -46,7 +46,7 @@ void Neuron::calcOutputGradients(const double target)
 
 void Neuron::calcHiddenGradients(const std::vector<Neuron>& net)
 {
-    if (isBias_) return;
+    if (isBias_ && ins_.empty()) return;
 
     // Since we don't have a target value to compare with
     // for a hidden neuron, we take something equivalent: DOW:
